@@ -162,7 +162,7 @@ describe('LokiCollection e2e', () => {
     });
 
     describe('Load Query Tests', () => {
-      const timeoutMs = 10;
+      const timeoutMs = 20;
 
       beforeEach((done) => {
         loadData(amount, filesColleciton, foldersCollection)
