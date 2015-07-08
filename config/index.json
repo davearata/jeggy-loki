@@ -1,0 +1,7 @@
+{
+  "destinationFolder": "dist",
+  "exportFileName": "jeggyloki",
+  "entryFileName": "index",
+  "exportVarName": "jeggyloki",
+  "mochaGlobals": ["stub", "spy", "expect"]
+}
