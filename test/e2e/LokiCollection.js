@@ -2,7 +2,7 @@ import { LokiCollection } from '../../src/LokiCollection';
 import loadData from '../util/loadFakeData';
 import _ from 'lodash';
 import Loki from 'lokijs';
-import faker  from 'faker';
+import faker from 'faker';
 
 describe('LokiCollection e2e', () => {
   let loki;
@@ -24,7 +24,7 @@ describe('LokiCollection e2e', () => {
         .then((created) => {
           createdDoc = created;
           done();
-        })
+        });
     });
 
     it('should be able to instantiate a doc', () => {
@@ -136,7 +136,7 @@ describe('LokiCollection e2e', () => {
   describe('Load Tests', () => {
     let filesColleciton;
     let foldersCollection;
-    const amount = 20; // 420 folders 8000 files
+    const amount = 10; // 110 folders 1000 files
 
     beforeEach(() => {
       filesColleciton = new LokiCollection('files', loki.addCollection('files'));

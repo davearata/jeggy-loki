@@ -59,6 +59,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
   };
 
   var LokiCollection = (function (_jeggy$Collection) {
+    _inherits(LokiCollection, _jeggy$Collection);
+
     function LokiCollection(name, nativeLokiCollection, idKey) {
       _classCallCheck(this, LokiCollection);
 
@@ -69,8 +71,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       this.nativeLokiCollection = nativeLokiCollection;
       this.idKey = idKey || '_id';
     }
-
-    _inherits(LokiCollection, _jeggy$Collection);
 
     _createClass(LokiCollection, [{
       key: 'find',
@@ -111,19 +111,25 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
             while (1) switch (context$4$0.prev = context$4$0.next) {
               case 0:
                 query = _LokiCollection__buildLokiQuery(query);
+                if (_.isUndefined(query)) {
+                  query = {};
+                }
                 doc = nativeLokiCollection.findOne(query);
 
                 if (!(doc === null)) {
-                  context$4$0.next = 4;
+                  context$4$0.next = 5;
                   break;
                 }
 
                 return context$4$0.abrupt('return', doc);
 
-              case 4:
+              case 5:
+                if (_.isArray(doc)) {
+                  doc = doc[0];
+                }
                 return context$4$0.abrupt('return', _.assign({}, doc));
 
-              case 5:
+              case 7:
               case 'end':
                 return context$4$0.stop();
             }
@@ -291,6 +297,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
   };
 
   var LokiAdapter = (function (_jeggy$Adapter) {
+    _inherits(LokiAdapter, _jeggy$Adapter);
+
     function LokiAdapter(loki) {
       _classCallCheck(this, LokiAdapter);
 
@@ -302,8 +310,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       this.loki = loki;
       this.collections = {};
     }
-
-    _inherits(LokiAdapter, _jeggy$Adapter);
 
     _createClass(LokiAdapter, [{
       key: 'addCollection',
@@ -379,5 +385,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
   })(jeggy.Adapter);
 
   exports.LokiAdapter = LokiAdapter;
+
+  require('babel/polyfill');
 });
 //# sourceMappingURL=./jeggyloki.js.map

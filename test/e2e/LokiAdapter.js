@@ -20,13 +20,29 @@ describe('LokiAdapter e2e', function () {
       .then(null, done);
   });
 
+  it('should be able to find a doc', function (done) {
+    const filesColleciton = lokiAdapter.addCollection('files', 'id');
+    const foldersCollection = lokiAdapter.addCollection('folders', 'id');
+
+    loadData(10, filesColleciton, foldersCollection)
+      .then(() => {
+        return foldersCollection.findOne();
+      })
+      .then((folder) => {
+        expect(folder).to.be.an('object');
+        expect(folder.id).to.be.a('string');
+        done();
+      })
+      .then(null, done);
+  });
+
   it('should populate documents', function (done) {
     const filesColleciton = lokiAdapter.addCollection('files', 'id');
     const foldersCollection = lokiAdapter.addCollection('folders', 'id');
     let folderId;
 
     loadData(10, filesColleciton, foldersCollection)
-    .then(() => {
+      .then(() => {
         return foldersCollection.findOne({parent: {$ne: null}});
       })
       .then((folder) => {

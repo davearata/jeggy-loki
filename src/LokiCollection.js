@@ -71,9 +71,15 @@ export class LokiCollection extends Collection {
     const nativeLokiCollection = this.nativeLokiCollection;
     return co(function* () {
       query = buildLokiQuery(query);
-      const doc = nativeLokiCollection.findOne(query);
+      if(_.isUndefined(query)) {
+        query = {};
+      }
+      let doc = nativeLokiCollection.findOne(query);
       if (doc === null) {
         return doc;
+      }
+      if(_.isArray(doc)) {
+        doc = doc[0];
       }
       return _.assign({}, doc);
     });

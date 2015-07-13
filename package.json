@@ -2,7 +2,7 @@
   "name": "jeggy-loki",
   "version": "0.0.1",
   "description": "Jeggy adapter for LokiJS",
-  "main": "dist/jeggy-loki.js",
+  "main": "dist/jeggyloki.js",
   "scripts": {
     "test": "gulp"
   },

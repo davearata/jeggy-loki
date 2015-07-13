@@ -18,41 +18,35 @@ const buildFolder = function buildFolder(foldersCollection, paentFolderId) {
     parent: paentFolderId,
     created: new Date().toString()
   };
-  return foldersCollection.create(doc)
+  return foldersCollection.create(doc);
 };
 
 const buildSubFoldersAndFiles = function buildSubFoldersAndFiles(amount, parentFolderId, filesColleciton, foldersCollection) {
   return buildFolder(foldersCollection, parentFolderId)
     .then(function (folder) {
-      let promise = Promise.resolve();
+      const promises = [];
       for (let index = 0; index < amount; index++) {
-        promise = promise.then(() => {
-          return buildFile(folder.id, filesColleciton);
-        });
+        promises.push(buildFile(folder.id, filesColleciton));
       }
-      return promise;
+      return Promise.all(promises);
     });
 };
 
 const buildFoldersAndFiles = function buildFoldersAndFiles(amount, filesColleciton, foldersCollection) {
   return buildFolder(foldersCollection)
     .then(function (folder) {
-      let promise = Promise.resolve();
+      const promises = [];
       for (let index = 0; index < amount; index++) {
-        promise = promise.then(() => {
-          return buildSubFoldersAndFiles(amount, folder.id, filesColleciton, foldersCollection);
-        });
+        promises.push(buildSubFoldersAndFiles(amount, folder.id, filesColleciton, foldersCollection));
       }
-      return promise;
+      return Promise.all(promises);
     });
 };
 
 export default function loadData(amount, filesColleciton, foldersCollection) {
-  let promise = Promise.resolve();
+  const promises = [];
   for (let index = 0; index < amount; index++) {
-    promise = promise.then(() => {
-      return buildFoldersAndFiles(amount, filesColleciton, foldersCollection);
-    });
+    promises.push(buildFoldersAndFiles(amount, filesColleciton, foldersCollection));
   }
-  return promise;
-};
+  return Promise.all(promises);
+}
