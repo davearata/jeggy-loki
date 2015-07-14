@@ -36,6 +36,8 @@ describe('LokiCollection e2e', () => {
       expect(createdDoc).to.have.property('username');
       collection.findById(createdDoc._id, '-name -username')
         .then((foundCard) => {
+          expect(foundCard).to.be.an('object');
+          expect(foundCard._id).to.be.a('string');
           expect(foundCard).to.not.have.property('name');
           expect(foundCard).to.not.have.property('username');
           done();
@@ -50,6 +52,15 @@ describe('LokiCollection e2e', () => {
           expect(foundCard).to.have.property('name');
           expect(foundCard).to.have.property('username');
           expect(_.keys(foundCard).length === 2).to.equal(true);
+          done();
+        })
+        .then(null, done);
+    });
+
+    it('should be able find a doc by a nested property', (done) => {
+      collection.findOne({'address.streetA': createdDoc.address.streetA})
+        .then((foundCard) => {
+          expect(foundCard).to.be.an('object');
           done();
         })
         .then(null, done);
@@ -77,7 +88,7 @@ describe('LokiCollection e2e', () => {
         .then(() => {
           return collection.find({username: username});
         })
-        .then((foundDocs)=>{
+        .then((foundDocs)=> {
           expect(foundDocs).to.be.an('array');
           expect(foundDocs.length).to.equal(2);
           return collection.removeWhere({username: username});
@@ -85,7 +96,7 @@ describe('LokiCollection e2e', () => {
         .then(() => {
           return collection.find({username: username});
         })
-        .then((foundDocs)=>{
+        .then((foundDocs)=> {
           expect(foundDocs).to.be.an('array');
           expect(foundDocs.length).to.equal(0);
           done();
@@ -97,7 +108,7 @@ describe('LokiCollection e2e', () => {
       createdDoc._id = 1234;
       collection.remove(createdDoc)
         .then(() => {
-          done('should not resolve here')
+          done('should not resolve here');
         })
         .then(null, () => {
           done();
@@ -125,7 +136,7 @@ describe('LokiCollection e2e', () => {
       createdDoc.modified = new Date().toString();
       collection.update(createdDoc)
         .then(() => {
-          done('should not resolve here')
+          done('should not resolve here');
         })
         .then(null, () => {
           done();
@@ -220,5 +231,5 @@ describe('LokiCollection e2e', () => {
           .then(null, done);
       });
     });
-  })
+  });
 });

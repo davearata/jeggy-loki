@@ -59,6 +59,9 @@ export class LokiCollection extends Collection {
     const nativeLokiCollection = this.nativeLokiCollection;
     return co(function* () {
       query = buildLokiQuery(query);
+      if(_.isUndefined(query)) {
+        query = {};
+      }
       const result = nativeLokiCollection.find(query);
       if (result === null) {
         return result;
@@ -67,31 +70,19 @@ export class LokiCollection extends Collection {
     });
   }
 
-  findOne(query) {
+  findOne(query, projection) {
     const nativeLokiCollection = this.nativeLokiCollection;
     return co(function* () {
       query = buildLokiQuery(query);
       if(_.isUndefined(query)) {
         query = {};
       }
-      let doc = nativeLokiCollection.findOne(query);
-      if (doc === null) {
-        return doc;
+      let doc = nativeLokiCollection.find(query);
+      if (doc === null || _.isEmpty(doc)) {
+        return null;
       }
       if(_.isArray(doc)) {
         doc = doc[0];
-      }
-      return _.assign({}, doc);
-    });
-  }
-
-  findById(id, projection) {
-    const nativeLokiCollection = this.nativeLokiCollection;
-    const query = buildLokiIdQuery(this.idKey, id);
-    return co(function* () {
-      let doc = nativeLokiCollection.findOne(query);
-      if (doc === null) {
-        return doc;
       }
       doc = _.assign({}, doc);
       if (_.isString(projection) && _.isObject(doc)) {
@@ -99,6 +90,11 @@ export class LokiCollection extends Collection {
       }
       return doc;
     });
+  }
+
+  findById(id, projection) {
+    const query = buildLokiIdQuery(this.idKey, id);
+    return this.findOne(query, projection);
   }
 
   create(doc) {

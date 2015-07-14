@@ -82,19 +82,22 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
             while (1) switch (context$4$0.prev = context$4$0.next) {
               case 0:
                 query = _LokiCollection__buildLokiQuery(query);
+                if (_.isUndefined(query)) {
+                  query = {};
+                }
                 result = nativeLokiCollection.find(query);
 
                 if (!(result === null)) {
-                  context$4$0.next = 4;
+                  context$4$0.next = 5;
                   break;
                 }
 
                 return context$4$0.abrupt('return', result);
 
-              case 4:
+              case 5:
                 return context$4$0.abrupt('return', _.clone(result, true));
 
-              case 5:
+              case 6:
               case 'end':
                 return context$4$0.stop();
             }
@@ -103,7 +106,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       }
     }, {
       key: 'findOne',
-      value: function findOne(query) {
+      value: function findOne(query, projection) {
         var nativeLokiCollection = this.nativeLokiCollection;
         return co(regeneratorRuntime.mark(function callee$3$0() {
           var doc;
@@ -114,22 +117,26 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
                 if (_.isUndefined(query)) {
                   query = {};
                 }
-                doc = nativeLokiCollection.findOne(query);
+                doc = nativeLokiCollection.find(query);
 
-                if (!(doc === null)) {
+                if (!(doc === null || _.isEmpty(doc))) {
                   context$4$0.next = 5;
                   break;
                 }
 
-                return context$4$0.abrupt('return', doc);
+                return context$4$0.abrupt('return', null);
 
               case 5:
                 if (_.isArray(doc)) {
                   doc = doc[0];
                 }
-                return context$4$0.abrupt('return', _.assign({}, doc));
+                doc = _.assign({}, doc);
+                if (_.isString(projection) && _.isObject(doc)) {
+                  doc = _LokiCollection__applyProjection(doc, projection);
+                }
+                return context$4$0.abrupt('return', doc);
 
-              case 7:
+              case 9:
               case 'end':
                 return context$4$0.stop();
             }
@@ -139,35 +146,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
     }, {
       key: 'findById',
       value: function findById(id, projection) {
-        var nativeLokiCollection = this.nativeLokiCollection;
         var query = _LokiCollection__buildLokiIdQuery(this.idKey, id);
-        return co(regeneratorRuntime.mark(function callee$3$0() {
-          var doc;
-          return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
-            while (1) switch (context$4$0.prev = context$4$0.next) {
-              case 0:
-                doc = nativeLokiCollection.findOne(query);
-
-                if (!(doc === null)) {
-                  context$4$0.next = 3;
-                  break;
-                }
-
-                return context$4$0.abrupt('return', doc);
-
-              case 3:
-                doc = _.assign({}, doc);
-                if (_.isString(projection) && _.isObject(doc)) {
-                  doc = _LokiCollection__applyProjection(doc, projection);
-                }
-                return context$4$0.abrupt('return', doc);
-
-              case 6:
-              case 'end':
-                return context$4$0.stop();
-            }
-          }, callee$3$0, this);
-        }));
+        return this.findOne(query, projection);
       }
     }, {
       key: 'create',
