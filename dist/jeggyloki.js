@@ -229,30 +229,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       value: function update(doc) {
         var nativeLokiCollection = this.nativeLokiCollection;
         var query = _LokiCollection__buildLokiIdQuery(this.idKey, doc[this.idKey]);
-        return co(regeneratorRuntime.mark(function callee$3$0() {
-          var foundDoc;
-          return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
-            while (1) switch (context$4$0.prev = context$4$0.next) {
-              case 0:
-                foundDoc = _.assign({}, nativeLokiCollection.findOne(query));
+        return this.findOne(query).then(function (foundDoc) {
+          if (_.isEmpty(foundDoc)) {
+            throw new Error('unknown doc id:' + doc.id);
+          }
 
-                if (!_.isEmpty(foundDoc)) {
-                  context$4$0.next = 3;
-                  break;
-                }
-
-                throw new Error('unknown doc id:' + doc.id);
-
-              case 3:
-                foundDoc = _.merge(foundDoc, doc);
-                return context$4$0.abrupt('return', _.assign({}, nativeLokiCollection.update(foundDoc)));
-
-              case 5:
-              case 'end':
-                return context$4$0.stop();
-            }
-          }, callee$3$0, this);
-        }));
+          foundDoc = _.merge(foundDoc, doc);
+          nativeLokiCollection.update(foundDoc);
+          return _.assign({}, foundDoc);
+        });
       }
     }]);
 

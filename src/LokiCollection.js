@@ -59,7 +59,7 @@ export class LokiCollection extends Collection {
     const nativeLokiCollection = this.nativeLokiCollection;
     return co(function* () {
       query = buildLokiQuery(query);
-      if(_.isUndefined(query)) {
+      if (_.isUndefined(query)) {
         query = {};
       }
       const result = nativeLokiCollection.find(query);
@@ -74,14 +74,14 @@ export class LokiCollection extends Collection {
     const nativeLokiCollection = this.nativeLokiCollection;
     return co(function* () {
       query = buildLokiQuery(query);
-      if(_.isUndefined(query)) {
+      if (_.isUndefined(query)) {
         query = {};
       }
       let doc = nativeLokiCollection.find(query);
       if (doc === null || _.isEmpty(doc)) {
         return null;
       }
-      if(_.isArray(doc)) {
+      if (_.isArray(doc)) {
         doc = doc[0];
       }
       doc = _.assign({}, doc);
@@ -131,13 +131,15 @@ export class LokiCollection extends Collection {
   update(doc) {
     const nativeLokiCollection = this.nativeLokiCollection;
     const query = buildLokiIdQuery(this.idKey, doc[this.idKey]);
-    return co(function* () {
-      let foundDoc = _.assign({}, nativeLokiCollection.findOne(query));
-      if (_.isEmpty(foundDoc)) {
-        throw new Error('unknown doc id:' + doc.id);
-      }
-      foundDoc = _.merge(foundDoc, doc);
-      return _.assign({}, nativeLokiCollection.update(foundDoc));
-    });
+    return this.findOne(query)
+      .then(foundDoc => {
+        if (_.isEmpty(foundDoc)) {
+          throw new Error('unknown doc id:' + doc.id);
+        }
+
+        foundDoc = _.merge(foundDoc, doc);
+        nativeLokiCollection.update(foundDoc);
+        return _.assign({}, foundDoc);
+      });
   }
 }
