@@ -74,7 +74,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
     _createClass(LokiCollection, [{
       key: 'find',
-      value: function find(query) {
+      value: function find(query, projection) {
         var nativeLokiCollection = this.nativeLokiCollection;
         return co(regeneratorRuntime.mark(function callee$3$0() {
           var result;
@@ -87,17 +87,17 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
                 }
                 result = nativeLokiCollection.find(query);
 
-                if (!(result === null)) {
-                  context$4$0.next = 5;
-                  break;
+                if (result !== null) {
+                  result = _.clone(result, true);
+                  if (_.isString(projection)) {
+                    result = _.map(result, function (doc) {
+                      return _LokiCollection__applyProjection(doc, projection);
+                    });
+                  }
                 }
-
                 return context$4$0.abrupt('return', result);
 
               case 5:
-                return context$4$0.abrupt('return', _.clone(result, true));
-
-              case 6:
               case 'end':
                 return context$4$0.stop();
             }

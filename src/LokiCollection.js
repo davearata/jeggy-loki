@@ -55,18 +55,23 @@ export class LokiCollection extends Collection {
     this.idKey = idKey || '_id';
   }
 
-  find(query) {
+  find(query, projection) {
     const nativeLokiCollection = this.nativeLokiCollection;
     return co(function* () {
       query = buildLokiQuery(query);
       if (_.isUndefined(query)) {
         query = {};
       }
-      const result = nativeLokiCollection.find(query);
-      if (result === null) {
-        return result;
+      let result = nativeLokiCollection.find(query);
+      if (result !== null) {
+        result = _.clone(result, true);
+        if (_.isString(projection)) {
+          result = _.map(result, (doc) => {
+            return applyProjection(doc, projection);
+          });
+        }
       }
-      return _.clone(result, true);
+      return result;
     });
   }
 

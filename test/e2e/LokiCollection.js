@@ -57,6 +57,29 @@ describe('LokiCollection e2e', () => {
         .then(null, done);
     });
 
+    it('should be able to only include fields when retrieving multiple docs', (done) => {
+      expect(_.keys(createdDoc).length > 2).to.equal(true);
+      collection.find({_id: createdDoc._id}, 'name username')
+        .then((foundCards) => {
+          expect(foundCards).to.be.an('array');
+          expect(foundCards.length).to.equal(1);
+          const foundCard = foundCards[0];
+          expect(foundCard).to.have.property('name');
+          expect(foundCard).to.have.property('username');
+          expect(_.keys(foundCard).length === 2).to.equal(true);
+        })
+        .then(() => {
+          return collection.find({_id: createdDoc._id});
+        })
+        .then((foundCards) => {
+          expect(foundCards).to.be.an('array');
+          expect(foundCards.length).to.equal(1);
+          expect(_.keys(foundCards[0]).length > 2).to.equal(true);
+          done();
+        })
+        .then(null, done);
+    });
+
     it('should be able find a doc by a nested property', (done) => {
       collection.findOne({'address.streetA': createdDoc.address.streetA})
         .then((foundCard) => {
