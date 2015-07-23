@@ -11,6 +11,26 @@ const populateDoc = function populateDoc(doc, fieldKey, collection) {
     throw new Error('Unknown field: ' + fieldKey);
   }
 
+  if (_.isArray(id)) {
+    const array = id;
+    const populatedArray = [];
+    const promises = _.map(array, (itemId) => {
+      return collection.findById(itemId)
+        .then((foundDoc) => {
+          if (!foundDoc) {
+            throw new Error('population  failed');
+          }
+
+          populatedArray.push(foundDoc);
+        });
+    });
+    return Promise.all(promises)
+      .then(() => {
+        doc[fieldKey] = populatedArray;
+        return doc;
+      });
+  }
+
   return collection.findById(id)
     .then((foundDoc) => {
       if (!foundDoc) {

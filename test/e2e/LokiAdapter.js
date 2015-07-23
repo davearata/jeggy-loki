@@ -69,4 +69,37 @@ describe('LokiAdapter e2e', function () {
       })
       .then(null, done);
   });
+
+  it('should populate an array field on documents', function (done) {
+    const filesColleciton = lokiAdapter.addCollection('files', 'id');
+    const foldersCollection = lokiAdapter.addCollection('folders', 'id');
+    let folderId;
+
+    loadData(10, filesColleciton, foldersCollection)
+      .then(() => {
+        return foldersCollection.findOne({parent: undefined});
+      })
+      .then((folder) => {
+        folderId = folder.id;
+        return lokiAdapter.populate(folder, 'children', 'folders');
+      })
+      .then((folders) => {
+        const folder = folders[0];
+        expect(folder.children).to.be.an('array');
+        _.each(folder.children, (child) => {
+          expect(child).to.be.an('object');
+        });
+      })
+      .then(() => {
+        return foldersCollection.findById(folderId);
+      })
+      .then((folder) => {
+        expect(folder.children).to.be.an('array');
+        _.each(folder.children, (child) => {
+          expect(child).to.be.a('string');
+        });
+        done();
+      })
+      .then(null, done);
+  });
 });

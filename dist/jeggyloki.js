@@ -252,6 +252,30 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       throw new Error('Unknown field: ' + fieldKey);
     }
 
+    if (_.isArray(id)) {
+      var _ret = (function () {
+        var array = id;
+        var populatedArray = [];
+        var promises = _.map(array, function (itemId) {
+          return collection.findById(itemId).then(function (foundDoc) {
+            if (!foundDoc) {
+              throw new Error('population  failed');
+            }
+
+            populatedArray.push(foundDoc);
+          });
+        });
+        return {
+          v: Promise.all(promises).then(function () {
+            doc[fieldKey] = populatedArray;
+            return doc;
+          })
+        };
+      })();
+
+      if (typeof _ret === 'object') return _ret.v;
+    }
+
     return collection.findById(id).then(function (foundDoc) {
       if (!foundDoc) {
         throw new Error('population  failed');
