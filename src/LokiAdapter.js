@@ -1,7 +1,6 @@
 import { Adapter } from 'jeggy';
 import Loki from 'lokijs';
 import _ from 'lodash';
-import co from 'co';
 
 import { LokiCollection } from './LokiCollection';
 
@@ -81,13 +80,12 @@ export class LokiAdapter extends Adapter {
   }
 
   populate(docs, fieldKey, collectionName) {
-    const getCollection = this.getCollection.bind(this);
-    return co(function* () {
+    try {
       if (!docs) {
-        throw new Error('tried to populate a null value');
+        return Promise.reject(new Error('tried to populate a null value'));
       }
 
-      const collection = getCollection(collectionName);
+      const collection = this.getCollection(collectionName);
 
       if (!_.isArray(docs)) {
         docs = [docs];
@@ -101,6 +99,8 @@ export class LokiAdapter extends Adapter {
         .then(() => {
           return docs;
         });
-    });
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 }

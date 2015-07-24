@@ -1,6 +1,5 @@
 import { Collection } from 'jeggy';
 import _ from 'lodash';
-import co from 'co';
 
 const buildLokiQuery = function buildLokiQuery(query) {
   if (_.keys(query).length > 1) {
@@ -57,43 +56,51 @@ export class LokiCollection extends Collection {
 
   find(query, projection) {
     const nativeLokiCollection = this.nativeLokiCollection;
-    return co(function* () {
-      query = buildLokiQuery(query);
-      if (_.isUndefined(query)) {
-        query = {};
-      }
-      let result = nativeLokiCollection.find(query);
-      if (result !== null) {
-        result = _.clone(result, true);
-        if (_.isString(projection)) {
-          result = _.map(result, (doc) => {
-            return applyProjection(doc, projection);
-          });
+    return new Promise((resolve, reject) => {
+      try {
+        query = buildLokiQuery(query);
+        if (_.isUndefined(query)) {
+          query = {};
         }
+        let result = nativeLokiCollection.find(query);
+        if (result !== null) {
+          result = _.clone(result, true);
+          if (_.isString(projection)) {
+            result = _.map(result, (doc) => {
+              return applyProjection(doc, projection);
+            });
+          }
+        }
+        resolve(result);
+      } catch (error) {
+        reject(error);
       }
-      return result;
     });
   }
 
   findOne(query, projection) {
     const nativeLokiCollection = this.nativeLokiCollection;
-    return co(function* () {
-      query = buildLokiQuery(query);
-      if (_.isUndefined(query)) {
-        query = {};
+    return new Promise((resolve, reject) => {
+      try {
+        query = buildLokiQuery(query);
+        if (_.isUndefined(query)) {
+          query = {};
+        }
+        let doc = nativeLokiCollection.find(query);
+        if (doc === null || _.isEmpty(doc)) {
+          return resolve(null);
+        }
+        if (_.isArray(doc)) {
+          doc = doc[0];
+        }
+        doc = _.assign({}, doc);
+        if (_.isString(projection) && _.isObject(doc)) {
+          doc = applyProjection(doc, projection);
+        }
+        resolve(doc);
+      } catch (error) {
+        reject(error);
       }
-      let doc = nativeLokiCollection.find(query);
-      if (doc === null || _.isEmpty(doc)) {
-        return null;
-      }
-      if (_.isArray(doc)) {
-        doc = doc[0];
-      }
-      doc = _.assign({}, doc);
-      if (_.isString(projection) && _.isObject(doc)) {
-        doc = applyProjection(doc, projection);
-      }
-      return doc;
     });
   }
 
@@ -104,32 +111,44 @@ export class LokiCollection extends Collection {
 
   create(doc) {
     const nativeLokiCollection = this.nativeLokiCollection;
-    return co(function* () {
-      const createdDoc = nativeLokiCollection.insert(doc);
-      if (createdDoc === null) {
-        return createdDoc;
+    return new Promise((resolve, reject) => {
+      try {
+        const createdDoc = nativeLokiCollection.insert(doc);
+        if (createdDoc === null) {
+          return resolve(createdDoc);
+        }
+        resolve(_.assign({}, createdDoc));
+      } catch (error) {
+        reject(error);
       }
-      return _.assign({}, createdDoc);
     });
   }
 
   removeWhere(query) {
     const nativeLokiCollection = this.nativeLokiCollection;
-    return co(function* () {
-      query = buildLokiQuery(query);
-      return nativeLokiCollection.removeWhere(query);
+    return new Promise((resolve, reject) => {
+      try {
+        query = buildLokiQuery(query);
+        resolve(nativeLokiCollection.removeWhere(query));
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
   remove(doc) {
     const nativeLokiCollection = this.nativeLokiCollection;
     const query = buildLokiIdQuery(this.idKey, doc[this.idKey]);
-    return co(function* () {
-      const foundDoc = _.assign({}, nativeLokiCollection.findOne(query));
-      if (_.isEmpty(foundDoc)) {
-        throw new Error('unknown doc id:' + doc.id);
+    return new Promise((resolve, reject) => {
+      try {
+        const foundDoc = _.assign({}, nativeLokiCollection.findOne(query));
+        if (_.isEmpty(foundDoc)) {
+          throw new Error('unknown doc id:' + doc.id);
+        }
+        resolve(nativeLokiCollection.remove(doc));
+      } catch (error) {
+        reject(error);
       }
-      return nativeLokiCollection.remove(doc);
     });
   }
 

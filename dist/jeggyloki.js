@@ -6,17 +6,14 @@ var _createClass = require('babel-runtime/helpers/create-class')['default'];
 
 var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
 
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
 var _Promise = require('babel-runtime/core-js/promise')['default'];
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jeggy'), require('lodash'), require('co'), require('lokijs')) : typeof define === 'function' && define.amd ? define(['exports', 'jeggy', 'lodash', 'co', 'lokijs'], factory) : factory(global.jeggyloki = {}, global.jeggy, global._, global.co, global.Loki);
-})(this, function (exports, jeggy, _, co, Loki) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jeggy'), require('lodash'), require('lokijs')) : typeof define === 'function' && define.amd ? define(['exports', 'jeggy', 'lodash', 'lokijs'], factory) : factory(global.jeggyloki = {}, global.jeggy, global._, global.Loki);
+})(this, function (exports, jeggy, _, Loki) {
   'use strict';
 
   _ = 'default' in _ ? _['default'] : _;
-  co = 'default' in co ? co['default'] : co;
   Loki = 'default' in Loki ? Loki['default'] : Loki;
 
   var _LokiCollection__buildLokiQuery = function buildLokiQuery(query) {
@@ -80,72 +77,53 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
       key: 'find',
       value: function find(query, projection) {
         var nativeLokiCollection = this.nativeLokiCollection;
-        return co(_regeneratorRuntime.mark(function callee$3$0() {
-          var result;
-          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
-            while (1) switch (context$4$0.prev = context$4$0.next) {
-              case 0:
-                query = _LokiCollection__buildLokiQuery(query);
-                if (_.isUndefined(query)) {
-                  query = {};
-                }
-                result = nativeLokiCollection.find(query);
-
-                if (result !== null) {
-                  result = _.clone(result, true);
-                  if (_.isString(projection)) {
-                    result = _.map(result, function (doc) {
-                      return _LokiCollection__applyProjection(doc, projection);
-                    });
-                  }
-                }
-                return context$4$0.abrupt('return', result);
-
-              case 5:
-              case 'end':
-                return context$4$0.stop();
+        return new _Promise(function (resolve, reject) {
+          try {
+            query = _LokiCollection__buildLokiQuery(query);
+            if (_.isUndefined(query)) {
+              query = {};
             }
-          }, callee$3$0, this);
-        }));
+            var result = nativeLokiCollection.find(query);
+            if (result !== null) {
+              result = _.clone(result, true);
+              if (_.isString(projection)) {
+                result = _.map(result, function (doc) {
+                  return _LokiCollection__applyProjection(doc, projection);
+                });
+              }
+            }
+            resolve(result);
+          } catch (error) {
+            reject(error);
+          }
+        });
       }
     }, {
       key: 'findOne',
       value: function findOne(query, projection) {
         var nativeLokiCollection = this.nativeLokiCollection;
-        return co(_regeneratorRuntime.mark(function callee$3$0() {
-          var doc;
-          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
-            while (1) switch (context$4$0.prev = context$4$0.next) {
-              case 0:
-                query = _LokiCollection__buildLokiQuery(query);
-                if (_.isUndefined(query)) {
-                  query = {};
-                }
-                doc = nativeLokiCollection.find(query);
-
-                if (!(doc === null || _.isEmpty(doc))) {
-                  context$4$0.next = 5;
-                  break;
-                }
-
-                return context$4$0.abrupt('return', null);
-
-              case 5:
-                if (_.isArray(doc)) {
-                  doc = doc[0];
-                }
-                doc = _.assign({}, doc);
-                if (_.isString(projection) && _.isObject(doc)) {
-                  doc = _LokiCollection__applyProjection(doc, projection);
-                }
-                return context$4$0.abrupt('return', doc);
-
-              case 9:
-              case 'end':
-                return context$4$0.stop();
+        return new _Promise(function (resolve, reject) {
+          try {
+            query = _LokiCollection__buildLokiQuery(query);
+            if (_.isUndefined(query)) {
+              query = {};
             }
-          }, callee$3$0, this);
-        }));
+            var doc = nativeLokiCollection.find(query);
+            if (doc === null || _.isEmpty(doc)) {
+              return resolve(null);
+            }
+            if (_.isArray(doc)) {
+              doc = doc[0];
+            }
+            doc = _.assign({}, doc);
+            if (_.isString(projection) && _.isObject(doc)) {
+              doc = _LokiCollection__applyProjection(doc, projection);
+            }
+            resolve(doc);
+          } catch (error) {
+            reject(error);
+          }
+        });
       }
     }, {
       key: 'findById',
@@ -157,76 +135,47 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
       key: 'create',
       value: function create(doc) {
         var nativeLokiCollection = this.nativeLokiCollection;
-        return co(_regeneratorRuntime.mark(function callee$3$0() {
-          var createdDoc;
-          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
-            while (1) switch (context$4$0.prev = context$4$0.next) {
-              case 0:
-                createdDoc = nativeLokiCollection.insert(doc);
-
-                if (!(createdDoc === null)) {
-                  context$4$0.next = 3;
-                  break;
-                }
-
-                return context$4$0.abrupt('return', createdDoc);
-
-              case 3:
-                return context$4$0.abrupt('return', _.assign({}, createdDoc));
-
-              case 4:
-              case 'end':
-                return context$4$0.stop();
+        return new _Promise(function (resolve, reject) {
+          try {
+            var createdDoc = nativeLokiCollection.insert(doc);
+            if (createdDoc === null) {
+              return resolve(createdDoc);
             }
-          }, callee$3$0, this);
-        }));
+            resolve(_.assign({}, createdDoc));
+          } catch (error) {
+            reject(error);
+          }
+        });
       }
     }, {
       key: 'removeWhere',
       value: function removeWhere(query) {
         var nativeLokiCollection = this.nativeLokiCollection;
-        return co(_regeneratorRuntime.mark(function callee$3$0() {
-          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
-            while (1) switch (context$4$0.prev = context$4$0.next) {
-              case 0:
-                query = _LokiCollection__buildLokiQuery(query);
-                return context$4$0.abrupt('return', nativeLokiCollection.removeWhere(query));
-
-              case 2:
-              case 'end':
-                return context$4$0.stop();
-            }
-          }, callee$3$0, this);
-        }));
+        return new _Promise(function (resolve, reject) {
+          try {
+            query = _LokiCollection__buildLokiQuery(query);
+            resolve(nativeLokiCollection.removeWhere(query));
+          } catch (error) {
+            reject(error);
+          }
+        });
       }
     }, {
       key: 'remove',
       value: function remove(doc) {
         var nativeLokiCollection = this.nativeLokiCollection;
         var query = _LokiCollection__buildLokiIdQuery(this.idKey, doc[this.idKey]);
-        return co(_regeneratorRuntime.mark(function callee$3$0() {
-          var foundDoc;
-          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
-            while (1) switch (context$4$0.prev = context$4$0.next) {
-              case 0:
-                foundDoc = _.assign({}, nativeLokiCollection.findOne(query));
-
-                if (!_.isEmpty(foundDoc)) {
-                  context$4$0.next = 3;
-                  break;
-                }
-
-                throw new Error('unknown doc id:' + doc.id);
-
-              case 3:
-                return context$4$0.abrupt('return', nativeLokiCollection.remove(doc));
-
-              case 4:
-              case 'end':
-                return context$4$0.stop();
+        return new _Promise(function (resolve, reject) {
+          try {
+            var foundDoc = _.assign({}, nativeLokiCollection.findOne(query));
+            if (_.isEmpty(foundDoc)) {
+              throw new Error('unknown doc id:' + doc.id);
             }
-          }, callee$3$0, this);
-        }));
+            resolve(nativeLokiCollection.remove(doc));
+          } catch (error) {
+            reject(error);
+          }
+        });
       }
     }, {
       key: 'update',
@@ -338,39 +287,37 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
     }, {
       key: 'populate',
       value: function populate(docs, fieldKey, collectionName) {
-        var getCollection = this.getCollection.bind(this);
-        return co(_regeneratorRuntime.mark(function callee$3$0() {
-          var collection, promises;
-          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
-            while (1) switch (context$4$0.prev = context$4$0.next) {
-              case 0:
-                if (docs) {
-                  context$4$0.next = 2;
-                  break;
-                }
+        var _this = this;
 
-                throw new Error('tried to populate a null value');
-
-              case 2:
-                collection = getCollection(collectionName);
-
-                if (!_.isArray(docs)) {
-                  docs = [docs];
-                }
-
-                promises = _.map(docs, function (doc) {
-                  return _LokiAdapter__populateDoc(doc, fieldKey, collection);
-                });
-                return context$4$0.abrupt('return', _Promise.all(promises).then(function () {
-                  return docs;
-                }));
-
-              case 6:
-              case 'end':
-                return context$4$0.stop();
+        try {
+          var _ret2 = (function () {
+            if (!docs) {
+              return {
+                v: _Promise.reject(new Error('tried to populate a null value'))
+              };
             }
-          }, callee$3$0, this);
-        }));
+
+            var collection = _this.getCollection(collectionName);
+
+            if (!_.isArray(docs)) {
+              docs = [docs];
+            }
+
+            var promises = _.map(docs, function (doc) {
+              return _LokiAdapter__populateDoc(doc, fieldKey, collection);
+            });
+
+            return {
+              v: _Promise.all(promises).then(function () {
+                return docs;
+              })
+            };
+          })();
+
+          if (typeof _ret2 === 'object') return _ret2.v;
+        } catch (error) {
+          return _Promise.reject(error);
+        }
       }
     }]);
 
