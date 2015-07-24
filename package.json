@@ -1,6 +1,6 @@
 {
   "name": "jeggy-loki",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Jeggy adapter for LokiJS",
   "main": "dist/jeggyloki.js",
   "scripts": {
@@ -64,6 +64,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
+    "babel-runtime": "^5.8.3",
     "co": "^4.5.4",
     "jeggy": "0.0.1",
     "lodash": "^3.10.0",

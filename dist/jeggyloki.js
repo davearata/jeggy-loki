@@ -1,10 +1,14 @@
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _get = require('babel-runtime/helpers/get')['default'];
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _Promise = require('babel-runtime/core-js/promise')['default'];
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jeggy'), require('lodash'), require('co'), require('lokijs')) : typeof define === 'function' && define.amd ? define(['exports', 'jeggy', 'lodash', 'co', 'lokijs'], factory) : factory(global.jeggyloki = {}, global.jeggy, global._, global.co, global.Loki);
@@ -76,9 +80,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       key: 'find',
       value: function find(query, projection) {
         var nativeLokiCollection = this.nativeLokiCollection;
-        return co(regeneratorRuntime.mark(function callee$3$0() {
+        return co(_regeneratorRuntime.mark(function callee$3$0() {
           var result;
-          return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
+          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
             while (1) switch (context$4$0.prev = context$4$0.next) {
               case 0:
                 query = _LokiCollection__buildLokiQuery(query);
@@ -108,9 +112,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       key: 'findOne',
       value: function findOne(query, projection) {
         var nativeLokiCollection = this.nativeLokiCollection;
-        return co(regeneratorRuntime.mark(function callee$3$0() {
+        return co(_regeneratorRuntime.mark(function callee$3$0() {
           var doc;
-          return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
+          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
             while (1) switch (context$4$0.prev = context$4$0.next) {
               case 0:
                 query = _LokiCollection__buildLokiQuery(query);
@@ -153,9 +157,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       key: 'create',
       value: function create(doc) {
         var nativeLokiCollection = this.nativeLokiCollection;
-        return co(regeneratorRuntime.mark(function callee$3$0() {
+        return co(_regeneratorRuntime.mark(function callee$3$0() {
           var createdDoc;
-          return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
+          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
             while (1) switch (context$4$0.prev = context$4$0.next) {
               case 0:
                 createdDoc = nativeLokiCollection.insert(doc);
@@ -181,8 +185,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       key: 'removeWhere',
       value: function removeWhere(query) {
         var nativeLokiCollection = this.nativeLokiCollection;
-        return co(regeneratorRuntime.mark(function callee$3$0() {
-          return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
+        return co(_regeneratorRuntime.mark(function callee$3$0() {
+          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
             while (1) switch (context$4$0.prev = context$4$0.next) {
               case 0:
                 query = _LokiCollection__buildLokiQuery(query);
@@ -200,9 +204,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       value: function remove(doc) {
         var nativeLokiCollection = this.nativeLokiCollection;
         var query = _LokiCollection__buildLokiIdQuery(this.idKey, doc[this.idKey]);
-        return co(regeneratorRuntime.mark(function callee$3$0() {
+        return co(_regeneratorRuntime.mark(function callee$3$0() {
           var foundDoc;
-          return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
+          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
             while (1) switch (context$4$0.prev = context$4$0.next) {
               case 0:
                 foundDoc = _.assign({}, nativeLokiCollection.findOne(query));
@@ -266,7 +270,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
           });
         });
         return {
-          v: Promise.all(promises).then(function () {
+          v: _Promise.all(promises).then(function () {
             doc[fieldKey] = populatedArray;
             return doc;
           })
@@ -335,9 +339,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
       key: 'populate',
       value: function populate(docs, fieldKey, collectionName) {
         var getCollection = this.getCollection.bind(this);
-        return co(regeneratorRuntime.mark(function callee$3$0() {
+        return co(_regeneratorRuntime.mark(function callee$3$0() {
           var collection, promises;
-          return regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
+          return _regeneratorRuntime.wrap(function callee$3$0$(context$4$0) {
             while (1) switch (context$4$0.prev = context$4$0.next) {
               case 0:
                 if (docs) {
@@ -357,7 +361,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
                 promises = _.map(docs, function (doc) {
                   return _LokiAdapter__populateDoc(doc, fieldKey, collection);
                 });
-                return context$4$0.abrupt('return', Promise.all(promises).then(function () {
+                return context$4$0.abrupt('return', _Promise.all(promises).then(function () {
                   return docs;
                 }));
 
@@ -374,7 +378,5 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
   })(jeggy.Adapter);
 
   exports.LokiAdapter = LokiAdapter;
-
-  require('babel/polyfill');
 });
 //# sourceMappingURL=./jeggyloki.js.map
