@@ -161,7 +161,7 @@ export class LokiCollection extends Collection {
           throw new Error('unknown doc id:' + doc.id);
         }
 
-        foundDoc = _.merge(foundDoc, doc);
+        foundDoc = _.assign(foundDoc, doc);
         nativeLokiCollection.update(foundDoc);
         return _.assign({}, foundDoc);
       });
