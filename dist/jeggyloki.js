@@ -201,8 +201,8 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
 
   var _LokiAdapter__populateDoc = function populateDoc(doc, fieldKey, collection) {
     var id = doc[fieldKey];
-    if (_.isUndefined(id)) {
-      throw new Error('Unknown field: ' + fieldKey);
+    if (_.isUndefined(id) || _.isNull(id)) {
+      return _Promise.resolve();
     }
 
     if (_.isArray(id)) {

@@ -102,4 +102,43 @@ describe('LokiAdapter e2e', function () {
       })
       .then(null, done);
   });
+
+  it('should populate documents even if element in the array has a null or undefined field', function (done) {
+    const filesColleciton = lokiAdapter.addCollection('files', 'id');
+    const foldersCollection = lokiAdapter.addCollection('folders', 'id');
+    let folderId;
+
+    loadData(10, filesColleciton, foldersCollection)
+      .then(() => {
+        return foldersCollection.findOne({parent: {$ne: null}});
+      })
+      .then((folder) => {
+        folderId = folder.id;
+        return filesColleciton.find({folder: folderId});
+      })
+      .then((files) => {
+        files[0].folder = null;
+        files[1].folder = undefined;
+        return lokiAdapter.populate(files, 'folder', 'folders');
+      })
+      .then((files) => {
+        _.each(files, (file, index) => {
+          if(index === 0 || index === 1) {
+            return;
+          }
+          expect(file.folder).to.be.an('object');
+          expect(file.folder.id).to.be.a('string');
+        });
+      })
+      .then(() => {
+        return filesColleciton.find({folder: folderId});
+      })
+      .then((files) => {
+        _.each(files, file => {
+          expect(file.folder).to.be.a('string');
+        });
+        done();
+      })
+      .then(null, done);
+  });
 });

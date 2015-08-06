@@ -6,8 +6,8 @@ import { LokiCollection } from './LokiCollection';
 
 const populateDoc = function populateDoc(doc, fieldKey, collection) {
   const id = doc[fieldKey];
-  if (_.isUndefined(id)) {
-    throw new Error('Unknown field: ' + fieldKey);
+  if (_.isUndefined(id) || _.isNull(id)) {
+    return Promise.resolve();
   }
 
   if (_.isArray(id)) {
