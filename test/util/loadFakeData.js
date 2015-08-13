@@ -62,8 +62,8 @@ const buildFoldersAndFiles = function buildFoldersAndFiles(amount, filesCollecit
 
 export default function loadData(amount, filesColleciton, foldersCollection) {
   const promises = [];
-  for (let index = 0; index < amount; index++) {
+  _.times(amount, () => {
     promises.push(buildFoldersAndFiles(amount, filesColleciton, foldersCollection));
-  }
+  });
   return Promise.all(promises);
 }

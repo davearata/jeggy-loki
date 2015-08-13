@@ -1,7 +1,16 @@
 import { Collection } from 'jeggy';
 import _ from 'lodash';
 
-const buildLokiQuery = function buildLokiQuery(query) {
+const buildLokiQuery = function buildLokiQuery(query, arrayKeys) {
+  query = _.reduce(query, (result, value, key) => {
+    if(_.contains(arrayKeys, key)) {
+      result[key] = {$contains: value};
+    } else {
+      result[key] = value;
+    }
+    return result;
+  }, {});
+
   if (_.keys(query).length > 1) {
     const queryArray = _.map(_.keys(query), (queryKey) => {
       const result = {};
@@ -45,20 +54,22 @@ const applyProjection = function applyProjection(doc, projection) {
 };
 
 export class LokiCollection extends Collection {
-  constructor(name, nativeLokiCollection, idKey) {
+  constructor(name, nativeLokiCollection, idKey, arrayKeys) {
     super(name);
     if (!nativeLokiCollection) {
       throw new Error('a LokiCollection must be intiialized with a native lokiJS collection');
     }
     this.nativeLokiCollection = nativeLokiCollection;
     this.idKey = idKey || '_id';
+    this.arrayKeys = arrayKeys;
   }
 
   find(query, projection) {
     const nativeLokiCollection = this.nativeLokiCollection;
+    const arrayKeys = this.arrayKeys;
     return new Promise((resolve, reject) => {
       try {
-        query = buildLokiQuery(query);
+        query = buildLokiQuery(query, arrayKeys);
         if (_.isUndefined(query)) {
           query = {};
         }
@@ -79,29 +90,14 @@ export class LokiCollection extends Collection {
   }
 
   findOne(query, projection) {
-    const nativeLokiCollection = this.nativeLokiCollection;
-    return new Promise((resolve, reject) => {
-      try {
-        query = buildLokiQuery(query);
-        if (_.isUndefined(query)) {
-          query = {};
+    return this.find(query, projection)
+      .then(result => {
+        if (_.isArray(result)) {
+          result = result[0];
         }
-        let doc = nativeLokiCollection.find(query);
-        if (doc === null || _.isEmpty(doc)) {
-          return resolve(null);
-        }
-        if (_.isArray(doc)) {
-          doc = doc[0];
-        }
-        doc = _.assign({}, doc);
-        if (_.isString(projection) && _.isObject(doc)) {
-          doc = applyProjection(doc, projection);
-        }
-        resolve(doc);
-      } catch (error) {
-        reject(error);
-      }
-    });
+
+        return result;
+      });
   }
 
   findById(id, projection) {
@@ -126,9 +122,10 @@ export class LokiCollection extends Collection {
 
   removeWhere(query) {
     const nativeLokiCollection = this.nativeLokiCollection;
+    const arrayKeys = this.arrayKeys;
     return new Promise((resolve, reject) => {
       try {
-        query = buildLokiQuery(query);
+        query = buildLokiQuery(query, arrayKeys);
         resolve(nativeLokiCollection.removeWhere(query));
       } catch (error) {
         reject(error);
@@ -143,7 +140,7 @@ export class LokiCollection extends Collection {
       try {
         const foundDoc = _.assign({}, nativeLokiCollection.findOne(query));
         if (_.isEmpty(foundDoc)) {
-          throw new Error('unknown doc id:' + doc.id);
+          reject(new Error('unknown doc id:' + doc.id));
         }
         resolve(nativeLokiCollection.remove(doc));
       } catch (error) {
@@ -154,11 +151,12 @@ export class LokiCollection extends Collection {
 
   update(doc) {
     const nativeLokiCollection = this.nativeLokiCollection;
-    const query = buildLokiIdQuery(this.idKey, doc[this.idKey]);
+    const idKey = this.idKey;
+    const query = buildLokiIdQuery(idKey, doc[idKey]);
     return this.findOne(query)
       .then(foundDoc => {
         if (_.isEmpty(foundDoc)) {
-          throw new Error('unknown doc id:' + doc.id);
+          throw new Error('unknown doc id:' + doc[idKey]);
         }
 
         foundDoc = _.assign(foundDoc, doc);

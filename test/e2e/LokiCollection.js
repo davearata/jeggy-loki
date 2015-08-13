@@ -96,7 +96,7 @@ describe('LokiCollection e2e', () => {
           return collection.findById(docId);
         })
         .then((foundDoc) => {
-          expect(foundDoc).to.be.a('null');
+          expect(foundDoc).to.be.an('undefined');
           done();
         })
         .then(null, done);
@@ -173,8 +173,8 @@ describe('LokiCollection e2e', () => {
     const amount = 10; // 110 folders 1000 files
 
     beforeEach(() => {
-      filesColleciton = new LokiCollection('files', loki.addCollection('files'));
-      foldersCollection = new LokiCollection('folders', loki.addCollection('folders'));
+      filesColleciton = new LokiCollection('files', loki.addCollection('files'), 'id');
+      foldersCollection = new LokiCollection('folders', loki.addCollection('folders'), 'id', ['children']);
     });
 
     it('should load many documents quickly', function (done) {
@@ -208,7 +208,7 @@ describe('LokiCollection e2e', () => {
 
       it('should find documents quickly', function (done) {
         this.timeout(timeoutMs);
-        foldersCollection.findOne({parent: {$ne: null}})
+        foldersCollection.findOne({parent: {$ne: undefined}})
           .then((folder) => {
             const folderId = folder.id;
             return filesColleciton.find({folder: folderId});
@@ -222,7 +222,7 @@ describe('LokiCollection e2e', () => {
 
       it('should find documents with multiple field queries', function (done) {
         this.timeout(timeoutMs);
-        foldersCollection.findOne({parent: {$ne: null}})
+        foldersCollection.findOne({parent: {$ne: undefined}})
           .then((folder) => {
             const folderId = folder.id;
             return filesColleciton.find({folder: folderId, created: new Date().toString()});
@@ -237,7 +237,7 @@ describe('LokiCollection e2e', () => {
 
       it('should find a single document with multiple field queries', function (done) {
         this.timeout(timeoutMs);
-        foldersCollection.findOne({parent: {$ne: null}})
+        foldersCollection.findOne({parent: {$ne: undefined}})
           .then((folder) => {
             const folderId = folder.id;
             return filesColleciton.find({folder: folderId});
@@ -249,6 +249,23 @@ describe('LokiCollection e2e', () => {
           })
           .then((file) => {
             expect(file).to.be.an('object');
+            done();
+          })
+          .then(null, done);
+      });
+
+      it('should find a document by querying an array', function (done) {
+        this.timeout(timeoutMs);
+        let foundFolder;
+        foldersCollection.findOne({parent: {$ne: undefined}})
+          .then((folder) => {
+            foundFolder = folder;
+            return foldersCollection.findOne({children: foundFolder.id});
+          })
+          .then(parent => {
+            expect(parent).to.be.an('object');
+            var hasChild = _.contains(parent.children, foundFolder.id);
+            expect(hasChild).to.equal(true);
             done();
           })
           .then(null, done);

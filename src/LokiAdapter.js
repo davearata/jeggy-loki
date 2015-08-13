@@ -51,7 +51,7 @@ export class LokiAdapter extends Adapter {
     this.collections = {};
   }
 
-  addCollection(name, idKey) {
+  addCollection(name, idKey, arrayKeys) {
     let collection;
     if (name instanceof LokiCollection) {
       collection = name;
@@ -61,7 +61,7 @@ export class LokiAdapter extends Adapter {
         throw new Error('must provide a name when adding a collection');
       }
       const lokiCollection = this.loki.addCollection(name);
-      collection = new LokiCollection(name, lokiCollection, idKey);
+      collection = new LokiCollection(name, lokiCollection, idKey, arrayKeys);
     }
 
     this.collections[name] = collection;
