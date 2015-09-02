@@ -16,7 +16,7 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
   _ = 'default' in _ ? _['default'] : _;
   Loki = 'default' in Loki ? Loki['default'] : Loki;
 
-  var _LokiCollection__buildLokiQuery = function buildLokiQuery(query, arrayKeys) {
+  var buildLokiQuery = function buildLokiQuery(query, arrayKeys) {
     query = _.reduce(query, function (result, value, key) {
       if (_.contains(arrayKeys, key)) {
         result[key] = { $contains: value };
@@ -37,13 +37,13 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
     return query;
   };
 
-  var _LokiCollection__buildLokiIdQuery = function buildLokiIdQuery(idKey, id) {
+  var buildLokiIdQuery = function buildLokiIdQuery(idKey, id) {
     var query = {};
     query[idKey] = id;
     return query;
   };
 
-  var _LokiCollection__applyProjection = function applyProjection(doc, projection) {
+  var applyProjection = function applyProjection(doc, projection) {
     var result = {};
     var projectionArr = projection.split(' ');
     if (_.includes(projection, '-')) {
@@ -90,7 +90,7 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
         var arrayKeys = this.arrayKeys;
         return new _Promise(function (resolve, reject) {
           try {
-            query = _LokiCollection__buildLokiQuery(query, arrayKeys);
+            query = buildLokiQuery(query, arrayKeys);
             if (_.isUndefined(query)) {
               query = {};
             }
@@ -99,7 +99,7 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
               result = _.clone(result, true);
               if (_.isString(projection)) {
                 result = _.map(result, function (doc) {
-                  return _LokiCollection__applyProjection(doc, projection);
+                  return applyProjection(doc, projection);
                 });
               }
             }
@@ -123,7 +123,7 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
     }, {
       key: 'findById',
       value: function findById(id, projection) {
-        var query = _LokiCollection__buildLokiIdQuery(this.idKey, id);
+        var query = buildLokiIdQuery(this.idKey, id);
         return this.findOne(query, projection);
       }
     }, {
@@ -143,13 +143,29 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
         });
       }
     }, {
+      key: 'insertMany',
+      value: function insertMany(docs) {
+        var nativeLokiCollection = this.nativeLokiCollection;
+        return new _Promise(function (resolve, reject) {
+          try {
+            var createdDocs = nativeLokiCollection.insert(docs);
+            if (createdDocs === null) {
+              return resolve(createdDocs);
+            }
+            resolve(_.clone(createdDocs, true));
+          } catch (error) {
+            reject(error);
+          }
+        });
+      }
+    }, {
       key: 'removeWhere',
       value: function removeWhere(query) {
         var nativeLokiCollection = this.nativeLokiCollection;
         var arrayKeys = this.arrayKeys;
         return new _Promise(function (resolve, reject) {
           try {
-            query = _LokiCollection__buildLokiQuery(query, arrayKeys);
+            query = buildLokiQuery(query, arrayKeys);
             resolve(nativeLokiCollection.removeWhere(query));
           } catch (error) {
             reject(error);
@@ -160,7 +176,7 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
       key: 'remove',
       value: function remove(doc) {
         var nativeLokiCollection = this.nativeLokiCollection;
-        var query = _LokiCollection__buildLokiIdQuery(this.idKey, doc[this.idKey]);
+        var query = buildLokiIdQuery(this.idKey, doc[this.idKey]);
         return new _Promise(function (resolve, reject) {
           try {
             var foundDoc = _.assign({}, nativeLokiCollection.findOne(query));
@@ -178,7 +194,7 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
       value: function update(doc) {
         var nativeLokiCollection = this.nativeLokiCollection;
         var idKey = this.idKey;
-        var query = _LokiCollection__buildLokiIdQuery(idKey, doc[idKey]);
+        var query = buildLokiIdQuery(idKey, doc[idKey]);
         return this.findOne(query).then(function (foundDoc) {
           if (_.isEmpty(foundDoc)) {
             throw new Error('unknown doc id:' + doc[idKey]);
@@ -196,7 +212,7 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
 
   exports.LokiCollection = LokiCollection;
 
-  var _LokiAdapter__populateDoc = function populateDoc(doc, fieldKey, collection) {
+  var populateDoc = function populateDoc(doc, fieldKey, collection) {
     var id = doc[fieldKey];
     if (_.isUndefined(id) || _.isNull(id)) {
       return _Promise.resolve();
@@ -301,7 +317,7 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
             }
 
             var promises = _.map(docs, function (doc) {
-              return _LokiAdapter__populateDoc(doc, fieldKey, collection);
+              return populateDoc(doc, fieldKey, collection);
             });
 
             return {

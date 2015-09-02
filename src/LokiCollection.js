@@ -120,6 +120,21 @@ export class LokiCollection extends Collection {
     });
   }
 
+  insertMany(docs) {
+    const nativeLokiCollection = this.nativeLokiCollection;
+    return new Promise((resolve, reject) => {
+      try {
+        const createdDocs = nativeLokiCollection.insert(docs);
+        if (createdDocs === null) {
+          return resolve(createdDocs);
+        }
+        resolve(_.clone(createdDocs, true));
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   removeWhere(query) {
     const nativeLokiCollection = this.nativeLokiCollection;
     const arrayKeys = this.arrayKeys;

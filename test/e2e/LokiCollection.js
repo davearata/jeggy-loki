@@ -31,6 +31,23 @@ describe('LokiCollection e2e', () => {
       expect(createdDoc).to.be.an('object');
     });
 
+    it('should be able to instantiate many docs', done => {
+      const docs = [
+        faker.helpers.createCard(),
+        faker.helpers.createCard(),
+        faker.helpers.createCard()
+      ];
+      collection.insertMany(docs)
+        .then((created) => {
+          expect(created).to.be.an('array');
+          expect(created.length).to.be.equal(3);
+          done();
+        })
+        .then(null, reason => {
+          done(reason);
+        });
+    });
+
     it('should be able to exclude fields when retrieving a doc', (done) => {
       expect(createdDoc).to.have.property('name');
       expect(createdDoc).to.have.property('username');
