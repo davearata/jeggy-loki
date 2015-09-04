@@ -205,6 +205,35 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
           return _.assign({}, foundDoc);
         });
       }
+    }, {
+      key: 'updateMany',
+      value: function updateMany(ids, update) {
+        var nativeLokiCollection = this.nativeLokiCollection;
+        var idKey = this.idKey;
+        var query = {};
+        query[idKey] = { $in: ids };
+        return new _Promise(function (resolve, reject) {
+          try {
+            nativeLokiCollection.chain().find(query).update(function (obj) {
+              if (_.isObject(update.$set) && _.keys(update.$set).length > 0) {
+                obj = _.assign(obj, update.$set);
+              }
+              if (_.isObject(update.$addToSet) && _.keys(update.$addToSet).length > 0) {
+                _.forEach(update.$addToSet, function (value, key) {
+                  if (!_.isArray(obj[key])) {
+                    obj[key] = [];
+                  }
+                  obj[key].push(value);
+                });
+              }
+              return obj;
+            });
+            resolve({ ok: 1, nModified: ids.length, n: ids.length });
+          } catch (err) {
+            reject(err);
+          }
+        });
+      }
     }]);
 
     return LokiCollection;
