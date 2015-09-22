@@ -306,7 +306,10 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
           if (!_.isString(name) || _.isEmpty(name)) {
             throw new Error('must provide a name when adding a collection');
           }
-          var lokiCollection = this.loki.addCollection(name);
+          var lokiCollection = this.loki.getCollection(name);
+          if (!lokiCollection) {
+            lokiCollection = this.loki.addCollection(name);
+          }
           collection = new LokiCollection(name, lokiCollection, idKey, arrayKeys);
         }
 

@@ -60,7 +60,10 @@ export class LokiAdapter extends Adapter {
       if (!_.isString(name) || _.isEmpty(name)) {
         throw new Error('must provide a name when adding a collection');
       }
-      const lokiCollection = this.loki.addCollection(name);
+      let lokiCollection = this.loki.getCollection(name);
+      if(!lokiCollection) {
+        lokiCollection = this.loki.addCollection(name);
+      }
       collection = new LokiCollection(name, lokiCollection, idKey, arrayKeys);
     }
 
