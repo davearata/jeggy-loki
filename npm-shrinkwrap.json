@@ -1,6 +1,6 @@
 {
   "name": "jeggy-loki",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "dependencies": {
     "babel-runtime": {
       "version": "5.8.20",

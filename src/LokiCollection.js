@@ -4,7 +4,11 @@ import _ from 'lodash';
 const buildLokiQuery = function buildLokiQuery(query, arrayKeys) {
   query = _.reduce(query, (result, value, key) => {
     if(_.contains(arrayKeys, key)) {
-      result[key] = {$contains: value};
+      if(_.isArray(value)) {
+        result[key] = {$containsAny: value};
+      } else {
+        result[key] = {$contains: value};
+      }
     } else {
       result[key] = value;
     }

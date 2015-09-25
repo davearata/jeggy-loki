@@ -19,7 +19,11 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
   var buildLokiQuery = function buildLokiQuery(query, arrayKeys) {
     query = _.reduce(query, function (result, value, key) {
       if (_.contains(arrayKeys, key)) {
-        result[key] = { $contains: value };
+        if (_.isArray(value)) {
+          result[key] = { $containsAny: value };
+        } else {
+          result[key] = { $contains: value };
+        }
       } else {
         result[key] = value;
       }
