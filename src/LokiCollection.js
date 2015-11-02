@@ -184,6 +184,19 @@ export class LokiCollection extends Collection {
       });
   }
 
+  count(query) {
+    try {
+      query = buildLokiQuery(query, this.arrayKeys);
+      if (_.isUndefined(query)) {
+        query = {};
+      }
+      const result = this.nativeLokiCollection.find(query);
+      return Promise.resolve(result.length);
+    } catch(err) {
+      return Promise.reject(err);
+    }
+  }
+
   updateMany(ids, update) {
     const nativeLokiCollection = this.nativeLokiCollection;
     const idKey = this.idKey;

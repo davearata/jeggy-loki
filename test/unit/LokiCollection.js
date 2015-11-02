@@ -55,6 +55,12 @@ describe('LokiCollection', function() {
     }).to.not.throw();
   });
 
+  it('should implement count', () => {
+    expect(() => {
+      collection.count();
+    }).to.not.throw();
+  });
+
   it('should implement insertMany', () => {
     expect(() => {
       collection.insertMany();

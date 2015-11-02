@@ -250,6 +250,23 @@ describe('LokiCollection e2e', () => {
           .then(null, done);
       });
 
+      it('should count documents', done => {
+        foldersCollection.count()
+         .then(foldersCount => {
+           expect(foldersCount).to.equal(110);
+           return foldersCollection.findOne({parent: {$ne: undefined}});
+         })
+         .then(folder => {
+           const folderId = folder.id;
+           return filesColleciton.count({folder: folderId});
+         })
+         .then(filesCount => {
+           expect(filesCount).to.equal(amount);
+           done();
+         })
+         .then(null, done);
+      });
+
       it('should find documents quickly', function (done) {
         this.timeout(timeoutMs);
         foldersCollection.findOne({parent: {$ne: undefined}})

@@ -210,6 +210,20 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
         });
       }
     }, {
+      key: 'count',
+      value: function count(query) {
+        try {
+          query = buildLokiQuery(query, this.arrayKeys);
+          if (_.isUndefined(query)) {
+            query = {};
+          }
+          var result = this.nativeLokiCollection.find(query);
+          return _Promise.resolve(result.length);
+        } catch (err) {
+          return _Promise.reject(err);
+        }
+      }
+    }, {
       key: 'updateMany',
       value: function updateMany(ids, update) {
         var nativeLokiCollection = this.nativeLokiCollection;
