@@ -1,0 +1,158 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/darata/.nvm/versions/node/v5.8.0/bin/node',
+1 verbose cli   '/Users/darata/.nvm/versions/node/v5.8.0/bin/npm',
+1 verbose cli   'publish' ]
+2 info using npm@3.7.3
+3 info using node@v5.8.0
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/Users/darata/projects/apprise/jeggy-loki',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/darata/.npm/jeggy-loki/0.5.1/package.tgz not in flight; packing
+9 verbose correctMkdir /Users/darata/.npm correctMkdir not in flight; initializing
+10 info lifecycle jeggy-loki@0.5.1~prepublish: jeggy-loki@0.5.1
+11 silly lifecycle jeggy-loki@0.5.1~prepublish: no script for prepublish, continuing
+12 verbose tar pack [ '/Users/darata/.npm/jeggy-loki/0.5.1/package.tgz',
+12 verbose tar pack   '/Users/darata/projects/apprise/jeggy-loki' ]
+13 verbose tarball /Users/darata/.npm/jeggy-loki/0.5.1/package.tgz
+14 verbose folder /Users/darata/projects/apprise/jeggy-loki
+15 verbose addLocalTarball adding from inside cache /Users/darata/.npm/jeggy-loki/0.5.1/package.tgz
+16 verbose correctMkdir /Users/darata/.npm correctMkdir not in flight; initializing
+17 silly cache afterAdd jeggy-loki@0.5.1
+18 verbose afterAdd /Users/darata/.npm/jeggy-loki/0.5.1/package/package.json not in flight; writing
+19 verbose correctMkdir /Users/darata/.npm correctMkdir not in flight; initializing
+20 verbose afterAdd /Users/darata/.npm/jeggy-loki/0.5.1/package/package.json written
+21 silly publish { name: 'jeggy-loki',
+21 silly publish   version: '0.5.1',
+21 silly publish   description: 'Jeggy adapter for LokiJS',
+21 silly publish   main: 'dist/jeggyloki.js',
+21 silly publish   scripts: { test: 'gulp', build: 'gulp build' },
+21 silly publish   repository:
+21 silly publish    { type: 'git',
+21 silly publish      url: 'git+https://github.com/davearata/jeggy-loki.git' },
+21 silly publish   keywords:
+21 silly publish    [ 'boilerplate',
+21 silly publish      'es6',
+21 silly publish      'node',
+21 silly publish      'starter',
+21 silly publish      'kit',
+21 silly publish      'transpile',
+21 silly publish      '6to5',
+21 silly publish      'babel' ],
+21 silly publish   author: { name: 'Dave Arata', email: 'davearata@dacatech.com' },
+21 silly publish   license: 'MIT',
+21 silly publish   bugs: { url: 'https://github.com/davearata/jeggy-loki/issues' },
+21 silly publish   homepage: 'https://github.com/davearata/jeggy-loki',
+21 silly publish   devDependencies:
+21 silly publish    { babel: '^5.4.7',
+21 silly publish      'babel-core': '^5.4.7',
+21 silly publish      'babel-eslint': '^3.1.17',
+21 silly publish      'babel-plugin-object-assign': '^1.1.0',
+21 silly publish      browserify: '^10.2.4',
+21 silly publish      chai: '^3.0.0',
+21 silly publish      del: '^1.2.0',
+21 silly publish      esperanto: '^0.7.2',
+21 silly publish      faker: '^2.1.5',
+21 silly publish      gulp: '^3.9.0',
+21 silly publish      'gulp-babel': '^5.1.0',
+21 silly publish      'gulp-eslint': '^0.14.0',
+21 silly publish      'gulp-file': '^0.2.0',
+21 silly publish      'gulp-filter': '^2.0.2',
+21 silly publish      'gulp-istanbul': '^0.10.0',
+21 silly publish      'gulp-jshint': '^1.11.0',
+21 silly publish      'gulp-livereload': '^3.8.0',
+21 silly publish      'gulp-load-plugins': '^1.0.0-rc.1',
+21 silly publish      'gulp-mocha': '^2.1.1',
+21 silly publish      'gulp-notify': '^2.2.0',
+21 silly publish      'gulp-plumber': '^1.0.1',
+21 silly publish      'gulp-rename': '^1.2.2',
+21 silly publish      'gulp-sourcemaps': '^1.5.2',
+21 silly publish      'gulp-uglifyjs': '^0.6.2',
+21 silly publish      isparta: '^3.0.3',
+21 silly publish      jshint: '2.7.0',
+21 silly publish      'jshint-stylish': '^2.0.0',
+21 silly publish      mocha: '^2.2.5',
+21 silly publish      mockery: '^1.4.0',
+21 silly publish      'node-libs-browser': '^0.5.2',
+21 silly publish      'run-sequence': '^1.1.1',
+21 silly publish      sinon: '^1.15.3',
+21 silly publish      'sinon-chai': '^2.8.0',
+21 silly publish      'vinyl-source-stream': '^1.1.0' },
+21 silly publish   dependencies:
+21 silly publish    { 'babel-runtime': '^5.8.3',
+21 silly publish      jeggy: '0.0.1',
+21 silly publish      lodash: '^3.10.0',
+21 silly publish      lokijs: 'github:techfort/LokiJS#c5860fb4c6d136cb1a081763e6fb8d4d72a7bad3' },
+21 silly publish   readme: '# jeggy-loki\n\nJeggy adapter for LokiJS\n\n[![Travis build status](http://img.shields.io/travis/davearata/jeggy-loki.svg?style=flat)](https://travis-ci.org/davearata/jeggy-loki)\n[![Code Climate](https://codeclimate.com/github/davearata/jeggy-loki/badges/gpa.svg)](https://codeclimate.com/github/davearata/jeggy-loki)\n[![Test Coverage](https://codeclimate.com/github/davearata/jeggy-loki/badges/coverage.svg)](https://codeclimate.com/github/davearata/jeggy-loki)\n[![Dependency Status](https://david-dm.org/davearata/jeggy-loki.svg)](https://david-dm.org/davearata/jeggy-loki)\n[![devDependency Status](https://david-dm.org/davearata/jeggy-loki/dev-status.svg)](https://david-dm.org/davearata/jeggy-loki#info=devDependencies)\n',
+21 silly publish   readmeFilename: 'README.md',
+21 silly publish   gitHead: '7f69ede4e35ee3b36e76004aefbbe449d7e36ba8',
+21 silly publish   _id: 'jeggy-loki@0.5.1',
+21 silly publish   _shasum: 'df2d7b9e8cdd411f12dcbdb5af69fda9703bbea3',
+21 silly publish   _from: '.' }
+22 verbose getPublishConfig undefined
+23 silly mapToRegistry name jeggy-loki
+24 silly mapToRegistry using default registry
+25 silly mapToRegistry registry http://10.0.0.200:4873/
+26 silly mapToRegistry uri http://10.0.0.200:4873/jeggy-loki
+27 verbose publish registryBase http://10.0.0.200:4873/
+28 silly publish uploading /Users/darata/.npm/jeggy-loki/0.5.1/package.tgz
+29 verbose request uri http://10.0.0.200:4873/jeggy-loki
+30 verbose request sending authorization for write operation
+31 info attempt registry request try #1 at 9:13:01 AM
+32 verbose request using bearer token for auth
+33 verbose request id 78e3ca6f693f28af
+34 http request PUT http://10.0.0.200:4873/jeggy-loki
+35 http 409 http://10.0.0.200:4873/jeggy-loki
+36 verbose headers { 'x-powered-by': 'Sinopia/1.4.0',
+36 verbose headers   'content-type': 'application/json; charset=utf-8',
+36 verbose headers   'content-length': '49',
+36 verbose headers   vary: 'Accept-Encoding',
+36 verbose headers   'x-status-cat': 'http://flic.kr/p/aV6jzz',
+36 verbose headers   date: 'Fri, 01 Apr 2016 13:13:01 GMT',
+36 verbose headers   connection: 'keep-alive' }
+37 verbose request invalidating /Users/darata/.npm/10.0.0.200_4873/jeggy-loki on PUT
+38 verbose request uri http://10.0.0.200:4873/jeggy-loki?write=true
+39 verbose request no auth needed
+40 info attempt registry request try #1 at 9:13:01 AM
+41 verbose request using bearer token for auth
+42 http request GET http://10.0.0.200:4873/jeggy-loki?write=true
+43 http 200 http://10.0.0.200:4873/jeggy-loki?write=true
+44 verbose headers { 'x-powered-by': 'Sinopia/1.4.0',
+44 verbose headers   'content-type': 'application/json; charset=utf-8',
+44 verbose headers   etag: '"182b71bfdd1806ebe19cba8d82cb9d9e"',
+44 verbose headers   vary: 'Accept-Encoding',
+44 verbose headers   'content-encoding': 'gzip',
+44 verbose headers   'x-status-cat': 'http://flic.kr/p/aVuVsF',
+44 verbose headers   date: 'Fri, 01 Apr 2016 13:13:01 GMT',
+44 verbose headers   connection: 'keep-alive',
+44 verbose headers   'transfer-encoding': 'chunked' }
+45 verbose stack Error: cannot modify pre-existing version
+45 verbose stack     at conflictError (/Users/darata/.nvm/versions/node/v5.8.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/publish.js:182:11)
+45 verbose stack     at CachingRegistryClient.putNext (/Users/darata/.nvm/versions/node/v5.8.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/publish.js:145:15)
+45 verbose stack     at /Users/darata/.nvm/versions/node/v5.8.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/publish.js:128:15
+45 verbose stack     at /Users/darata/.nvm/versions/node/v5.8.0/lib/node_modules/npm/lib/cache/caching-client.js:53:8
+45 verbose stack     at f (/Users/darata/.nvm/versions/node/v5.8.0/lib/node_modules/npm/node_modules/once/once.js:17:25)
+45 verbose stack     at /Users/darata/.nvm/versions/node/v5.8.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:76:16
+45 verbose stack     at f (/Users/darata/.nvm/versions/node/v5.8.0/lib/node_modules/npm/node_modules/once/once.js:17:25)
+45 verbose stack     at CachingRegistryClient.<anonymous> (/Users/darata/.nvm/versions/node/v5.8.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:259:12)
+45 verbose stack     at /Users/darata/.nvm/versions/node/v5.8.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:178:7
+45 verbose stack     at Gunzip.onEnd (zlib.js:227:5)
+46 verbose pkgid jeggy-loki
+47 verbose cwd /Users/darata/projects/apprise/jeggy-loki
+48 error Darwin 15.3.0
+49 error argv "/Users/darata/.nvm/versions/node/v5.8.0/bin/node" "/Users/darata/.nvm/versions/node/v5.8.0/bin/npm" "publish"
+50 error node v5.8.0
+51 error npm  v3.7.3
+52 error code EPUBLISHCONFLICT
+53 error publish fail Cannot publish over existing version.
+54 error publish fail Update the 'version' field in package.json and try again.
+55 error publish fail
+56 error publish fail To automatically increment version numbers, see:
+57 error publish fail npm help version
+58 verbose exit [ 1, true ]

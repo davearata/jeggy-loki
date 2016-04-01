@@ -68,5 +68,8 @@
     "jeggy": "0.0.1",
     "lodash": "^3.10.0",
     "lokijs": "techfort/LokiJS#c5860fb4c6d136cb1a081763e6fb8d4d72a7bad3"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   }
 }
