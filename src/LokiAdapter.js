@@ -64,6 +64,9 @@ export class LokiAdapter extends Adapter {
       if(!lokiCollection) {
         lokiCollection = this.loki.addCollection(name);
       }
+      if(!_.isObject(lokiCollection.constraints.unique[idKey])) {
+        lokiCollection.ensureUniqueIndex(idKey);
+      }
       collection = new LokiCollection(name, lokiCollection, idKey, arrayKeys);
     }
 

@@ -1,10 +1,11 @@
 {
   "name": "jeggy-loki",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Jeggy adapter for LokiJS",
   "main": "dist/jeggyloki.js",
   "scripts": {
-    "test": "gulp"
+    "test": "gulp",
+    "build": "gulp build"
   },
   "repository": {
     "type": "git",
