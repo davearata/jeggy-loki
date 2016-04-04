@@ -175,7 +175,7 @@ export class LokiCollection extends Collection {
     return this.findOne(query)
       .then(foundDoc => {
         if (_.isEmpty(foundDoc)) {
-          throw new Error('unknown doc id:' + doc[idKey]);
+          throw new Error('unknown doc id: ' + doc[idKey]);
         }
 
         foundDoc = _.assign(foundDoc, doc);
@@ -226,5 +226,23 @@ export class LokiCollection extends Collection {
         reject(err);
       }
     });
+  }
+
+  incrementField(doc, incrementField, incrementValue) {
+    const nativeLokiCollection = this.nativeLokiCollection;
+    const idKey = this.idKey;
+    const query = buildLokiIdQuery(idKey, doc[idKey]);
+    return this.findOne(query)
+      .then(foundDoc => {
+        if (_.isEmpty(foundDoc)) {
+          throw new Error('unknown doc id: ' + doc[idKey]);
+        }
+        if (_.isUndefined(foundDoc[incrementField]) || _.isNull(foundDoc[incrementField])) {
+          foundDoc[incrementField] = 0;
+        }
+        foundDoc[incrementField] = foundDoc[incrementField] + incrementValue;
+        nativeLokiCollection.update(foundDoc);
+        return _.assign({}, foundDoc);
+      });
   }
 }

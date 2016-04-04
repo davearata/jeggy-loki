@@ -201,7 +201,7 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
         var query = buildLokiIdQuery(idKey, doc[idKey]);
         return this.findOne(query).then(function (foundDoc) {
           if (_.isEmpty(foundDoc)) {
-            throw new Error('unknown doc id:' + doc[idKey]);
+            throw new Error('unknown doc id: ' + doc[idKey]);
           }
 
           foundDoc = _.assign(foundDoc, doc);
@@ -250,6 +250,24 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
           } catch (err) {
             reject(err);
           }
+        });
+      }
+    }, {
+      key: 'incrementField',
+      value: function incrementField(doc, _incrementField, incrementValue) {
+        var nativeLokiCollection = this.nativeLokiCollection;
+        var idKey = this.idKey;
+        var query = buildLokiIdQuery(idKey, doc[idKey]);
+        return this.findOne(query).then(function (foundDoc) {
+          if (_.isEmpty(foundDoc)) {
+            throw new Error('unknown doc id: ' + doc[idKey]);
+          }
+          if (_.isUndefined(foundDoc[_incrementField]) || _.isNull(foundDoc[_incrementField])) {
+            foundDoc[_incrementField] = 0;
+          }
+          foundDoc[_incrementField] = foundDoc[_incrementField] + incrementValue;
+          nativeLokiCollection.update(foundDoc);
+          return _.assign({}, foundDoc);
         });
       }
     }]);
