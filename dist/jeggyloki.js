@@ -114,6 +114,11 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
         });
       }
     }, {
+      key: 'findStream',
+      value: function findStream() {
+        throw new Error('jeggy-loki does not yet support this functionality');
+      }
+    }, {
       key: 'findOne',
       value: function findOne(query, projection) {
         return this.find(query, projection).then(function (result) {

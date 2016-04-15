@@ -93,7 +93,7 @@ export class LokiCollection extends Collection {
     });
   }
 
-  findStream(query, projection) {
+  findStream() {
     throw new Error('jeggy-loki does not yet support this functionality');
   }
 
