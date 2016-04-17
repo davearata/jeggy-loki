@@ -100,12 +100,12 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
             }
             var result = nativeLokiCollection.find(query);
             if (result !== null) {
-              result = _.clone(result, true);
               if (_.isString(projection)) {
                 result = _.map(result, function (doc) {
                   return applyProjection(doc, projection);
                 });
               }
+              result = _.clone(result, true);
             }
             resolve(result);
           } catch (error) {
