@@ -68,6 +68,10 @@ export class LokiCollection extends Collection {
     this.arrayKeys = arrayKeys;
   }
 
+  aggregate() {
+    throw new Error('jeggy-loki does not yet support this functionality');
+  }
+
   //TODO implement sortBy functionality
   find(query, projection) {
     const nativeLokiCollection = this.nativeLokiCollection;
