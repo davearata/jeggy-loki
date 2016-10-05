@@ -104,6 +104,16 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
         }
         return _Promise.resolve(doc);
       }
+    }, {
+      key: 'pull',
+      value: function pull(doc, pullQuery) {
+        var arrayKey = _.keys(pullQuery)[0];
+        var value = pullQuery[arrayKey];
+        doc[arrayKey] = _.filter(doc[arrayKey], function (item) {
+          return item.toString() !== value.toString();
+        });
+        return this.update(doc);
+      }
 
       //TODO implement sortBy functionality
     }, {
