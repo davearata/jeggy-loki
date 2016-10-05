@@ -72,6 +72,17 @@ export class LokiCollection extends Collection {
     throw new Error('jeggy-loki does not yet support this functionality');
   }
 
+  addToSet (doc, arrayKey, value) {
+    if (!_.isArray(doc[arrayKey])) {
+      doc[arrayKey] = [];
+    }
+    if (!_.includes(doc[arrayKey], value)) {
+      doc[arrayKey].push(value);
+      return this.update(doc);
+    }
+    return Promise.resolve(doc);
+  }
+
   //TODO implement sortBy functionality
   find(query, projection) {
     const nativeLokiCollection = this.nativeLokiCollection;

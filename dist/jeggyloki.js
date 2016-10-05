@@ -88,6 +88,25 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
     }
 
     _createClass(LokiCollection, [{
+      key: 'aggregate',
+      value: function aggregate() {
+        throw new Error('jeggy-loki does not yet support this functionality');
+      }
+    }, {
+      key: 'addToSet',
+      value: function addToSet(doc, arrayKey, value) {
+        if (!_.isArray(doc[arrayKey])) {
+          doc[arrayKey] = [];
+        }
+        if (!_.includes(doc[arrayKey], value)) {
+          doc[arrayKey].push(value);
+          return this.update(doc);
+        }
+        return _Promise.resolve(doc);
+      }
+
+      //TODO implement sortBy functionality
+    }, {
       key: 'find',
       value: function find(query, projection) {
         var nativeLokiCollection = this.nativeLokiCollection;
@@ -118,6 +137,8 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
       value: function findStream() {
         throw new Error('jeggy-loki does not yet support this functionality');
       }
+
+      //TODO implement sortBy functionality
     }, {
       key: 'findOne',
       value: function findOne(query, projection) {
