@@ -83,6 +83,15 @@ export class LokiCollection extends Collection {
     return Promise.resolve(doc);
   }
 
+  pull (doc, pullQuery) {
+    const arrayKey = _.keys(pullQuery)[0];
+    const value = pullQuery[arrayKey];
+    doc[arrayKey] = _.filter(doc[arrayKey], function (item) {
+      return item.toString() !== value.toString();
+    });
+    return this.update(doc);
+  }
+
   //TODO implement sortBy functionality
   find(query, projection) {
     const nativeLokiCollection = this.nativeLokiCollection;
