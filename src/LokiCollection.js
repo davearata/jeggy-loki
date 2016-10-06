@@ -76,9 +76,15 @@ export class LokiCollection extends Collection {
     if (!_.isArray(doc[arrayKey])) {
       doc[arrayKey] = [];
     }
-
+    var compareValue = value;
+    if (_.isObject(value)) {
+      compareValue = JSON.stringify(value);
+    }
     let foundValue = _.find(doc[arrayKey], function (d) {
-      return _.isEqual(d, value);
+      if (_.isObject(d)) {
+        d = JSON.stringify(d);
+      }
+      return d === compareValue;
     });
 
     if (_.isUndefined(foundValue)) {

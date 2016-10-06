@@ -98,9 +98,15 @@ var _Promise = require('babel-runtime/core-js/promise')['default'];
         if (!_.isArray(doc[arrayKey])) {
           doc[arrayKey] = [];
         }
-
+        var compareValue = value;
+        if (_.isObject(value)) {
+          compareValue = JSON.stringify(value);
+        }
         var foundValue = _.find(doc[arrayKey], function (d) {
-          return _.isEqual(d, value);
+          if (_.isObject(d)) {
+            d = JSON.stringify(d);
+          }
+          return d === compareValue;
         });
 
         if (_.isUndefined(foundValue)) {
