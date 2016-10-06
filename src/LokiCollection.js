@@ -76,7 +76,12 @@ export class LokiCollection extends Collection {
     if (!_.isArray(doc[arrayKey])) {
       doc[arrayKey] = [];
     }
-    if (!_.includes(doc[arrayKey], value)) {
+
+    let foundValue = _.find(doc[arrayKey], function (d) {
+      return _.isEqual(d, value);
+    });
+
+    if (_.isUndefined(foundValue)) {
       doc[arrayKey].push(value);
       return this.update(doc);
     }
