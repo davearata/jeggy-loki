@@ -1,6 +1,6 @@
 {
   "name": "jeggy-loki",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "description": "Jeggy adapter for LokiJS",
   "main": "dist/jeggyloki.js",
   "scripts": {
