@@ -1,144 +1,89 @@
-import { LokiAdapter } from '../../src/LokiAdapter';
-import loadData from '../util/loadFakeData';
-import _ from 'lodash';
+import _ from 'lodash'
+import co from 'co'
+import { LokiAdapter } from '../../src/LokiAdapter'
+import loadData from '../util/loadFakeData'
 
 describe('LokiAdapter e2e', function () {
-  let lokiAdapter;
+  let lokiAdapter
+  let filesColleciton
+  let foldersCollection
 
-  beforeEach(() => {
-    lokiAdapter = new LokiAdapter('test.json');
-  });
-
-  it('should be able to instantiate a doc', function (done) {
-    const collection = lokiAdapter.addCollection('Test');
-
-    collection.create({arr: ['test']})
-      .then((testObj) => {
-        expect(testObj).to.be.an('object');
-        done();
-      })
-      .then(null, done);
-  });
-
-  it('should be able to find a doc', function (done) {
-    const filesColleciton = lokiAdapter.addCollection('files', 'id');
-    const foldersCollection = lokiAdapter.addCollection('folders', 'id');
-
+  beforeEach(function (done) {
+    lokiAdapter = new LokiAdapter('test.json')
+    filesColleciton = lokiAdapter.addCollection('files', 'id')
+    foldersCollection = lokiAdapter.addCollection('folders', 'id')
     loadData(10, filesColleciton, foldersCollection)
-      .then(() => {
-        return foldersCollection.findOne();
-      })
-      .then((folder) => {
-        expect(folder).to.be.an('object');
-        expect(folder.id).to.be.a('string');
-        done();
-      })
-      .then(null, done);
-  });
+      .then(() => done())
+      .then(null, done)
+  })
 
-  it('should populate documents', function (done) {
-    const filesColleciton = lokiAdapter.addCollection('files', 'id');
-    const foldersCollection = lokiAdapter.addCollection('folders', 'id');
-    let folderId;
+  it('should be able to instantiate a doc', function () {
+    const collection = lokiAdapter.addCollection('Test')
+    return expect(collection.create({arr: ['test']})).to.eventually.be.an('object')
+  })
 
-    loadData(10, filesColleciton, foldersCollection)
-      .then(() => {
-        return foldersCollection.findOne({parent: {$ne: null}});
-      })
-      .then((folder) => {
-        folderId = folder.id;
-        return filesColleciton.find({folder: folderId});
-      })
-      .then((files) => {
-        return lokiAdapter.populate(files, 'folder', 'folders');
-      })
-      .then((files) => {
-        _.each(files, file => {
-          expect(file.folder).to.be.an('object');
-          expect(file.folder.id).to.be.a('string');
-        });
-      })
-      .then(() => {
-        return filesColleciton.find({folder: folderId});
-      })
-      .then((files) => {
-        _.each(files, file => {
-          expect(file.folder).to.be.an('string');
-        });
-        done();
-      })
-      .then(null, done);
-  });
+  it('should be able to find a doc', function () {
+    return co(function * () {
+      const folder = yield foldersCollection.findOne()
+      expect(folder).to.be.an('object')
+      expect(folder.id).to.be.a('string')
+    })
+  })
 
-  it('should populate an array field on documents', function (done) {
-    const filesColleciton = lokiAdapter.addCollection('files', 'id');
-    const foldersCollection = lokiAdapter.addCollection('folders', 'id');
-    let folderId;
+  it('should populate documents', function () {
+    return co(function * () {
+      const folder = yield foldersCollection.findOne({parent: {$ne: null}})
+      const folderId = folder.id
+      const files = yield filesColleciton.find({folder: folderId})
+      const populatedFiles = yield lokiAdapter.populate(files, 'folder', 'folders')
+      _.each(populatedFiles, file => {
+        expect(file.folder).to.be.an('object')
+        expect(file.folder.id).to.be.a('string')
+      })
+      const filesInFolder = yield filesColleciton.find({folder: folderId})
+      _.each(filesInFolder, file => {
+        expect(file.folder).to.be.an('string')
+      })
+    })
+  })
 
-    loadData(10, filesColleciton, foldersCollection)
-      .then(() => {
-        return foldersCollection.findOne({parent: undefined});
+  it('should populate an array field on documents', function () {
+    return co(function * () {
+      const folder = yield foldersCollection.findOne({parent: undefined})
+      const folderId = folder.id
+      const populatedFolders = yield lokiAdapter.populate(folder, 'children', 'folders')
+      const populatedFolder = populatedFolders[0]
+      expect(populatedFolder.children).to.be.an('array')
+      _.each(populatedFolder.children, (populatedChild) => {
+        expect(populatedChild).to.be.an('object')
       })
-      .then((folder) => {
-        folderId = folder.id;
-        return lokiAdapter.populate(folder, 'children', 'folders');
+      const foundFolder = yield foldersCollection.findById(folderId)
+      expect(foundFolder.children).to.be.an('array')
+      _.each(foundFolder.children, (child) => {
+        expect(child).to.be.a('string')
       })
-      .then((folders) => {
-        const folder = folders[0];
-        expect(folder.children).to.be.an('array');
-        _.each(folder.children, (child) => {
-          expect(child).to.be.an('object');
-        });
-      })
-      .then(() => {
-        return foldersCollection.findById(folderId);
-      })
-      .then((folder) => {
-        expect(folder.children).to.be.an('array');
-        _.each(folder.children, (child) => {
-          expect(child).to.be.a('string');
-        });
-        done();
-      })
-      .then(null, done);
-  });
+    })
+  })
 
-  it('should populate documents even if element in the array has a null or undefined field', function (done) {
-    const filesColleciton = lokiAdapter.addCollection('files', 'id');
-    const foldersCollection = lokiAdapter.addCollection('folders', 'id');
-    let folderId;
-
-    loadData(10, filesColleciton, foldersCollection)
-      .then(() => {
-        return foldersCollection.findOne({parent: {$ne: null}});
+  it('should populate documents even if element in the array has a null or undefined field', function () {
+    return co(function * () {
+      const folder = yield foldersCollection.findOne({parent: {$ne: null}})
+      const folderId = folder.id
+      const files = yield filesColleciton.find({folder: folderId})
+      files[0].folder = null
+      files[1].folder = undefined
+      const populatedFiles = yield lokiAdapter.populate(files, 'folder', 'folders')
+      _.each(populatedFiles, (file, index) => {
+        if (index === 0 || index === 1) {
+          return
+        }
+        expect(file.folder).to.be.an('object')
+        expect(file.folder.id).to.be.a('string')
       })
-      .then((folder) => {
-        folderId = folder.id;
-        return filesColleciton.find({folder: folderId});
+      const foundFiles = yield filesColleciton.find({folder: folderId})
+      _.each(foundFiles, file => {
+        expect(file.folder).to.be.a('string')
       })
-      .then((files) => {
-        files[0].folder = null;
-        files[1].folder = undefined;
-        return lokiAdapter.populate(files, 'folder', 'folders');
-      })
-      .then((files) => {
-        _.each(files, (file, index) => {
-          if(index === 0 || index === 1) {
-            return;
-          }
-          expect(file.folder).to.be.an('object');
-          expect(file.folder.id).to.be.a('string');
-        });
-      })
-      .then(() => {
-        return filesColleciton.find({folder: folderId});
-      })
-      .then((files) => {
-        _.each(files, file => {
-          expect(file.folder).to.be.a('string');
-        });
-        done();
-      })
-      .then(null, done);
-  });
-});
+    })
+  })
+})

@@ -1,3 +1,3 @@
-export { LokiCollection } from './LokiCollection';
+export { LokiCollection } from './LokiCollection'
 
-export { LokiAdapter } from './LokiAdapter';
+export { LokiAdapter } from './LokiAdapter'

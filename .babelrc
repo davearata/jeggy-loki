@@ -1,4 +1,6 @@
 {
-  "stage": 0,
-  "plugins": [ "object-assign" ]
+  "presets": [
+    "es2015",
+    "stage-0"
+  ]
 }

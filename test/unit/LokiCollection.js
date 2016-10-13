@@ -1,14 +1,14 @@
-import { LokiCollection } from '../../src/LokiCollection';
+import { LokiCollection } from '../../src/LokiCollection'
 
-describe('LokiCollection', function() {
-  let sandbox;
-  let collection;
-  let resolvedDoc;
-  let getStub;
+describe('LokiCollection', function () {
+  let sandbox
+  let collection
+  let resolvedDoc
+  let getStub
 
-  beforeEach(function() {
-    sandbox = sinon.sandbox.create();
-    getStub = sandbox.stub().returns(resolvedDoc);
+  beforeEach(function () {
+    sandbox = sinon.sandbox.create()
+    getStub = sandbox.stub().returns(resolvedDoc)
     collection = new LokiCollection('test', {
       find: sandbox.stub().returns(resolvedDoc),
       findOne: sandbox.stub().returns(resolvedDoc),
@@ -17,95 +17,80 @@ describe('LokiCollection', function() {
       removeWhere: sandbox.stub(),
       remove: sandbox.stub(),
       update: sandbox.stub()
-    });
-  });
+    })
+  })
 
   afterEach(function () {
-    sandbox.restore();
-  });
+    sandbox.restore()
+  })
 
-  it('should throw an error if intiialized without a native loki collection', () => {
+  it('should throw an error if intiialized without a native loki collection', function () {
     expect(() => {
-      const errorTestCollection = new LokiCollection('errorTest');
-      errorTestCollection.find();
-    }).to.throw(Error);
-  });
+      const errorTestCollection = new LokiCollection('errorTest')
+      errorTestCollection.find()
+    }).to.throw(Error)
+  })
 
-  it('should implement find', () => {
+  it('should implement find', function () {
     expect(() => {
-      collection.find();
-    }).to.not.throw();
-  });
+      collection.find()
+    }).to.not.throw()
+  })
 
-  it('should implement findOne', () => {
+  it('should implement findOne', function () {
     expect(() => {
-      collection.findOne();
-    }).to.not.throw();
-  });
+      collection.findOne()
+    }).to.not.throw()
+  })
 
-  it('should implement findById', () => {
+  it('should implement findById', function () {
     expect(() => {
-      collection.findById();
-    }).to.not.throw();
-  });
+      collection.findById()
+    }).to.not.throw()
+  })
 
-  it('should implement create', () => {
+  it('should implement create', function () {
     expect(() => {
-      collection.create();
-    }).to.not.throw();
-  });
+      collection.create()
+    }).to.not.throw()
+  })
 
-  it('should implement count', () => {
+  it('should implement count', function () {
     expect(() => {
-      collection.count();
-    }).to.not.throw();
-  });
+      collection.count()
+    }).to.not.throw()
+  })
 
-  it('should implement insertMany', () => {
+  it('should implement insertMany', function () {
     expect(() => {
-      collection.insertMany();
-    }).to.not.throw();
-  });
+      collection.insertMany()
+    }).to.not.throw()
+  })
 
-  it('should implement removeWhere', () => {
+  it('should implement removeWhere', function () {
     expect(() => {
-      collection.removeWhere();
-    }).to.not.throw();
-  });
+      collection.removeWhere()
+    }).to.not.throw()
+  })
 
-  it('should implement remove', () => {
-    getStub.returns({id: 123});
+  it('should implement remove', function () {
+    getStub.returns({id: 123})
     expect(() => {
-      collection.remove({id: 123});
-    }).to.not.throw();
-  });
+      collection.remove({id: 123})
+    }).to.not.throw()
+  })
 
-  it('should throw an error if it can not find the doc to remove', (done) => {
-    collection.remove({id: 123})
-      .then(() => {
-        done(new Error('this should not have resolved'));
-      })
-      .then(null, (reason) => {
-        expect(reason).to.be.an('error');
-        done();
-      });
-  });
+  it('should throw an error if it can not find the doc to remove', function () {
+    return collection.remove({id: 123}).should.be.rejectedWith(Error)
+  })
 
-  it('should implement update', () => {
+  it('should implement update', function () {
     expect(() => {
-      collection.update({id: 123});
-    }).to.not.throw();
-  });
+      collection.update({id: 123})
+    }).to.not.throw()
+  })
 
-  it('should throw an error if it can not find the doc to update', (done) => {
-    collection.update({id: 123})
-      .then(() => {
-        done(new Error('this should not have resolved'));
-      })
-      .then(null, (reason) => {
-        expect(reason).to.be.an('error');
-        done();
-      });
-  });
-
-});
+  it('should throw an error if it can not find the doc to update', function () {
+    return collection.update({id: 123}).should.be.rejectedWith(Error)
+  })
+})
