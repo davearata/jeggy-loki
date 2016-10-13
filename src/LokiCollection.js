@@ -121,7 +121,7 @@ export class LokiCollection extends Collection {
               return applyProjection(doc, projection)
             })
           }
-          result = _.clone(result, true)
+          result = _.cloneDeep(result)
         }
         resolve(result)
       } catch (error) {
@@ -139,7 +139,7 @@ export class LokiCollection extends Collection {
     return co.call(this, function * () {
       const result = yield this.find(query, projection)
       if (_.isArray(result)) {
-        return _.clone(result[0])
+        return result[0]
       }
 
       return result
@@ -174,7 +174,7 @@ export class LokiCollection extends Collection {
         if (createdDocs === null) {
           return resolve(createdDocs)
         }
-        resolve(_.clone(createdDocs, true))
+        resolve(_.cloneDeep(createdDocs))
       } catch (error) {
         reject(error)
       }
