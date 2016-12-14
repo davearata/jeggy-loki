@@ -58,6 +58,22 @@ const applyProjection = function applyProjection (doc, projection) {
   return result
 }
 
+const stringifyObjectValues = function stringifyObjectValues (val) {
+  if (_.isObject(val)) {
+    if (!_.isPlainObject(val)) {
+      return val.toString()
+    } else {
+      return _.reduce(val, function (res, value, key) {
+        res[key] = stringifyObjectValues(value)
+        return res
+      }, {})
+    }
+  } else if (_.isArray(val)) {
+    return _.map(val, stringifyObjectValues)
+  }
+  return val
+};
+
 export class LokiCollection extends Collection {
   constructor (name, nativeLokiCollection, idKey, arrayKeys) {
     super(name)
@@ -96,12 +112,26 @@ export class LokiCollection extends Collection {
   }
 
   pull (doc, pullQuery) {
-    const arrayKey = _.keys(pullQuery)[0]
-    const value = pullQuery[arrayKey]
-    doc[arrayKey] = _.filter(doc[arrayKey], function (item) {
-      return item.toString() !== value.toString()
-    })
-    return this.update(doc)
+    const arrayKey = _.keys(pullQuery)[0];
+    let removeValue = pullQuery[arrayKey];
+    removeValue = stringifyObjectValues(removeValue)
+    if (_.isObject(removeValue)) {
+      doc[arrayKey] = _.filter(doc[arrayKey], function (value) {
+        let match = true
+        _.forEach(removeValue, function (val, key) {
+          let isMatch = value[key] === val
+          if (!isMatch) {
+            match = false
+          }
+        })
+        return !match
+      })
+    } else {
+      doc[arrayKey] = _.filter(doc[arrayKey], function (value) {
+        return value !== removeValue
+      })
+    }
+    return this.update(doc);
   }
 
   // TODO implement sortBy functionality
