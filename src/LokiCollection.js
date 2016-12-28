@@ -72,7 +72,7 @@ const stringifyObjectValues = function stringifyObjectValues (val) {
     return _.map(val, stringifyObjectValues)
   }
   return val
-};
+}
 
 export class LokiCollection extends Collection {
   constructor (name, nativeLokiCollection, idKey, arrayKeys) {
@@ -112,8 +112,8 @@ export class LokiCollection extends Collection {
   }
 
   pull (doc, pullQuery) {
-    const arrayKey = _.keys(pullQuery)[0];
-    let removeValue = pullQuery[arrayKey];
+    const arrayKey = _.keys(pullQuery)[0]
+    let removeValue = pullQuery[arrayKey]
     removeValue = stringifyObjectValues(removeValue)
     if (_.isObject(removeValue)) {
       doc[arrayKey] = _.filter(doc[arrayKey], function (value) {
@@ -131,7 +131,7 @@ export class LokiCollection extends Collection {
         return value !== removeValue
       })
     }
-    return this.update(doc);
+    return this.update(doc)
   }
 
   // TODO implement sortBy functionality
@@ -233,7 +233,7 @@ export class LokiCollection extends Collection {
         if (_.isEmpty(foundDoc)) {
           reject(new Error('unknown doc id:' + doc.id))
         }
-        resolve(nativeLokiCollection.remove(doc))
+        resolve(nativeLokiCollection.removeWhere({_id: doc._id}))
       } catch (error) {
         reject(error)
       }
