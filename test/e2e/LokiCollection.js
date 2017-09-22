@@ -155,6 +155,75 @@ describe('LokiCollection e2e', function () {
         })
       })
     })
+
+    it('should be able to addToSet', function () {
+      return co(function * () {
+        const doc = {arr: ['test']}
+        const created = yield collection.create(doc)
+        yield collection.addToSet(created, 'arr', 'test1')
+        const foundDoc = yield collection.findById(created._id)
+        expect(foundDoc.arr.length).to.equal(2)
+        expect(_.includes(foundDoc.arr, 'test1')).to.equal(true)
+      })
+    })
+
+    it('should not add a duplicate value to the set', function () {
+      return co(function * () {
+        const doc = {arr: ['test']}
+        const created = yield collection.create(doc)
+        yield collection.addToSet(created, 'arr', 'test')
+        const foundDoc = yield collection.findById(created._id)
+        expect(foundDoc.arr.length).to.equal(1)
+        expect(_.includes(foundDoc.arr, 'test')).to.equal(true)
+      })
+    })
+
+    it('should be able to addToSet for multiple docs by a query', function () {
+      return co(function * () {
+        const docs = [
+          {arr: ['test']},
+          {arr: ['test1']},
+          {arr: ['test2']}
+        ]
+        const created = yield collection.insertMany(docs)
+        const ids = _.map(created, '_id')
+        yield collection.addToSetByQuery({_id: {$in: ids}}, 'arr', 'newValue')
+        const updated = yield collection.find({_id: {$in: ids}})
+        _.forEach(updated, doc => {
+          expect(doc.arr.length).to.equal(2)
+          expect(_.includes(doc.arr, 'newValue')).to.equal(true)
+        })
+      })
+    })
+
+    it('should be able to pull a value from the set', function () {
+      return co(function * () {
+        const doc = {arr: ['test']}
+        const created = yield collection.create(doc)
+        yield collection.pull(created, {arr: 'test'})
+        const foundDoc = yield collection.findById(created._id)
+        expect(foundDoc.arr.length).to.equal(0)
+        expect(_.includes(foundDoc.arr, 'test')).to.equal(false)
+      })
+    })
+
+    it('should be able to pull a value from multiple docs based on a query', function () {
+      return co(function * () {
+        const docs = [
+          {arr: ['test']},
+          {arr: ['test']},
+          {arr: ['test']}
+        ]
+        const created = yield collection.insertMany(docs)
+        const ids = _.map(created, '_id')
+        yield collection.pullByQuery({_id: {$in: ids}}, {arr: 'test'})
+        const updated = yield collection.find({_id: {$in: ids}})
+        _.forEach(updated, doc => {
+          expect(doc.arr.length).to.equal(0)
+          expect(_.includes(doc.arr, 'test')).to.equal(false)
+        })
+      })
+    })
   })
 
   describe('Load Tests', function () {

@@ -111,6 +111,17 @@ export class LokiCollection extends Collection {
     return Promise.resolve(doc)
   }
 
+  addToSetByQuery (query, arrayKey, value) {
+    return co.call(this, function * () {
+      let docs = yield this.find(query)
+      const promises = []
+      for (const doc of docs) {
+        promises.push(this.addToSet(doc, arrayKey, value))
+      }
+      return Promise.all(promises)
+    })
+  }
+
   pull (doc, pullQuery) {
     const arrayKey = _.keys(pullQuery)[0]
     let removeValue = pullQuery[arrayKey]
@@ -132,6 +143,17 @@ export class LokiCollection extends Collection {
       })
     }
     return this.update(doc)
+  }
+
+  pullByQuery (query, pullQuery) {
+    return co.call(this, function * () {
+      let docs = yield this.find(query)
+      const promises = []
+      for (const doc of docs) {
+        promises.push(this.pull(doc, pullQuery))
+      }
+      return Promise.all(promises)
+    })
   }
 
   // TODO implement sortBy functionality
