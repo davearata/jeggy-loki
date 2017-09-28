@@ -196,6 +196,43 @@ describe('LokiCollection e2e', function () {
       })
     })
 
+    it('shouldnt add the document to the set because the query should filter the doc out', function () {
+      return co(function * () {
+        const doc = {arr: [{user: 'me', priority: 100}]}
+        const created = yield collection.create(doc)
+        yield collection.addToSetByQuery({_id: created._id, 'arr.user': {$ne: 'me'}}, 'arr', {user: 'me', priority: 200})
+        const updated = yield collection.findOne({_id: created._id})
+        updated.arr.length.should.equal(1)
+      })
+    })
+
+    it('should be able to pull a subDocument in an array', function () {
+      return co(function * () {
+        const doc = {arr: [{user: 'me', priority: 100}, {user: 'you', priority: 200}]}
+        const created = yield collection.create(doc)
+        yield collection.pull(created, {arr: {user: 'me'}})
+        const updated = yield collection.findOne({_id: doc._id})
+        updated.arr.length.should.equal(1)
+      })
+    })
+
+    it('should be able to pull a subDocument from multiple documents by a query', function () {
+      return co(function * () {
+        const docs = [
+          {_id: 1, arr: [{user: 'me', priority: 100}, {user: 'you', priority: 200}]},
+          {_id: 2, arr: [{user: 'me', priority: 100}, {user: 'you', priority: 200}]}
+        ]
+        const created = yield collection.insertMany(docs)
+        const ids = _.map(created, '_id')
+        yield collection.pullByQuery({_id: {$in: ids}}, {arr: {user: 'me'}})
+        const updated = yield collection.find({_id: {$in: ids}})
+        _.forEach(updated, doc => {
+          doc.arr.length.should.equal(1)
+          doc.arr[0].user.should.equal('you')
+        })
+      })
+    })
+
     it('should be able to pull a value from the set', function () {
       return co(function * () {
         const doc = {arr: ['test']}

@@ -67,7 +67,7 @@ describe('LokiAdapter e2e', function () {
 
   it('should populate documents even if element in the array has a null or undefined field', function () {
     return co(function * () {
-      const folder = yield foldersCollection.findOne({parent: {$ne: null}})
+      const folder = yield foldersCollection.findOne({parent: {$ne: undefined}})
       const folderId = folder.id
       const files = yield filesColleciton.find({folder: folderId})
       files[0].folder = null

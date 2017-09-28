@@ -1,6 +1,6 @@
 {
   "name": "jeggy-loki",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Jeggy adapter for LokiJS",
   "main": "dist/index.js",
   "files": [
@@ -68,7 +68,7 @@
     "co": "^4.6.0",
     "jeggy": "^1.0.0",
     "lodash": "^4.16.4",
-    "lokijs": "techfort/LokiJS#c5860fb4c6d136cb1a081763e6fb8d4d72a7bad3"
+    "lokijs": "^1.5.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
